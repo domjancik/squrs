@@ -1,5 +1,43 @@
-import React, { ReactElement, useState } from 'react'
+
+/**
+ * 
+ *       * ******* *
+ *       *         *
+ *       *   .5    *
+ *       *         *
+ *       * ******* *
+ * 
+ */
+
+
+
+
+
+//useAnimationFrame((time) => {setDimmer(state => (state + time / 1000) % 1)})
+
+// TODO multiple preset animations
+// TODO beat sync
+// TODO rounded corners
+// TODO expression evaluation
+// TODO saving expression as preset
+// TODO persisting presets
+// TODO live sync of presets / selection (fbase realtime db?)
+// TODO ...
+
+
+
+
+
+
+
+
+import React, { ReactElement, useContext, useState } from 'react'
+import { setSyntheticTrailingComments } from 'typescript'
 import useAnimationFrame from './useAnimationFrame'
+
+import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
+import { TimeContext } from './TimeContext'
+
 
 interface Props {
     side?: number | string
@@ -18,27 +56,23 @@ const dim = (val: number) => {
 }
 
 function Squr({side = 100}: Props): ReactElement {
-    const [dimmer, setDimmer] = useState(.5)
-    
-    useAnimationFrame((time) => {setDimmer(state => (state + time / 1000) % 1)})
+    const time = useContext(TimeContext)
+    const [uptime, setUptime] = useState(0)
+    useAnimationFrame((time) => {setUptime(ut => ut + time / 1000)})
 
-// TODO multiple preset animations
-// TODO beat sync
-// TODO rounded corners
-// TODO expression evaluation
-// TODO saving expression as preset
-// TODO persisting presets
-// TODO live sync of presets / selection (fbase realtime db?)
-// TODO ...
+    const [expression, setExpression] = useState('.5+t%1')
+
+    const ast = parse(expression)
+    const res = evalast(ast, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time})
 
     return (
         <div style={
             {
                 ...sqr(side),
-                ...dim(dimmer),
+                ...dim(res),
             }
         }>
-            
+            <input type="text" value={expression} onChange={e => setExpression(e.target.value)} />
         </div>
     )
 }
