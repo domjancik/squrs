@@ -24,6 +24,11 @@
 // TODO persisting presets
 // TODO live sync of presets / selection (fbase realtime db?)
 // TODO support 2x not just 2*x
+// TODO input bg on focus
+// TODO shared globals (exposed to users)
+// TODO graph display
+// TODO deterministic noise functions
+// TODO splittable squrs
 // TODO ...
 
 
@@ -33,6 +38,10 @@ import useAnimationFrame from './useAnimationFrame'
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
 
+// const COLOR = '#72dec2'
+// const COLOR_RGB = '114, 222, 194'
+// const COLOR_RGB = '255, 0, 255'
+const COLOR_RGB = '170, 187, 204'
 
 interface Props {
     side?: number | string
@@ -55,7 +64,7 @@ const dim = (val: number) => {
 }
 
 const trns = (a: number) => {
-    return { background: `rgba(255, 255, 255, ${a})`}
+    return { background: `rgba(${COLOR_RGB}, ${a})`}
 }
 
 // TODO available in expr eval lib?
@@ -104,7 +113,7 @@ function Squr({init, side = 100}: Props): ReactElement {
             }
         }>
             <input
-                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '1em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc'}}
+                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '1em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: '#abc', fontWeight: 'bold'}}
                 type="text" value={expression} onChange={e => setExpression(e.target.value)}
             />
             {parseError.current && <div style={{color: 'red'}}>{parseError.current.description}</div>}
