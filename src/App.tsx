@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import Squr from './Squr/Squr';
 import { TimeContext } from './Squr/TimeContext';
-import useAnimationFrame from './Squr/useAnimationFrame';
 import useTime from './useTime';
 
 const SIDE = 300
