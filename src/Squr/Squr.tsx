@@ -82,7 +82,18 @@ function Squr({init, side = 100}: Props): ReactElement {
         parseError.current = e as ParseError
     }
 
-    const res = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time})
+    /**
+     * Sin function normalized to 0-1 cycle input, 0-1 return
+     */
+    const normalizedSin = (x: number) => Math.sin(x * Math.PI * 2) / 2 + 0.5
+
+    /**
+     * input is period
+     */
+    // const timeSin = TODO
+
+
+    const res = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin})
 
     return (
         <div style={
