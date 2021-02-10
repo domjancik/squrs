@@ -54,6 +54,10 @@ const dim = (val: number) => {
     return {background: `rgb(${com([v, v, v])})`}
 }
 
+const trns = (a: number) => {
+    return { background: `rgba(255, 255, 255, ${a})`}
+}
+
 // TODO available in expr eval lib?
 type ParseError = null | {
     index: number
@@ -85,7 +89,7 @@ function Squr({init, side = 100}: Props): ReactElement {
             {
                 ...{borderRadius: '0.5em', padding: '1em', boxSizing: 'border-box', boxShadow: 'inset 0em -.2em .5em #abc'},
                 ...sqr(side),
-                ...dim(res),
+                ...trns(res),
             }
         }>
             <input
