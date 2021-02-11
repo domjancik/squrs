@@ -29,6 +29,7 @@
 // TODO graph display
 // TODO deterministic noise functions
 // TODO splittable squrs
+// TODO keyboard func ~ key.a / key('a') / variable for few special keys / gamepad
 // TODO ...
 
 
@@ -37,19 +38,12 @@ import useAnimationFrame from './useAnimationFrame'
 
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
+import SqurProps from './SqurProps'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
 // const COLOR_RGB = '255, 0, 255'
 const COLOR_RGB = '170, 187, 204'
-
-interface Props {
-    side?: number | string
-    /**
-     * Initial expression
-     */
-    init?: string
-}
 
 const sqr = (side: number | string) => ({
     width: side,
@@ -73,14 +67,16 @@ type ParseError = null | {
     description: string
 }
 
-function Squr({init, side = 100}: Props): ReactElement {
+function Squr({init, side = 100, expression: expressionExternal, setExpression: setExpressionExternal, variables = {}}: SqurProps   ): ReactElement {
     const time = useContext(TimeContext)
     const [uptime, setUptime] = useState(0)
     useAnimationFrame((time) => {setUptime(ut => ut + time / 1000)})
 
-    const [expression, setExpression] = useState(init || '0')
+    const [expressionInternal, setExpressionInternal] = useState(init || '0')
+    const expression = expressionExternal ?? expressionInternal
+    const setExpression = setExpressionExternal ?? setExpressionInternal
     
-    const lastValidAst = useRef(parse(''))
+    const lastValidAst = useRef(parse('0'))
     const parseError = useRef<ParseError>(null)
 
     try {
@@ -88,6 +84,7 @@ function Squr({init, side = 100}: Props): ReactElement {
         lastValidAst.current = ast
         parseError.current = null
     } catch(e) {
+        console.error(e)
         parseError.current = e as ParseError
     }
 
@@ -102,7 +99,10 @@ function Squr({init, side = 100}: Props): ReactElement {
     // const timeSin = TODO
 
 
-    const res = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin})
+    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, ...variables})
+    const res = typeof exprEvalRes === 'number' ? exprEvalRes : 0 // evalast may return strings, functions, ...
+
+    const fontColor = res < 0.5 ? '#abc' : '#444'
 
     return (
         <div style={
@@ -113,7 +113,7 @@ function Squr({init, side = 100}: Props): ReactElement {
             }
         }>
             <input
-                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '1em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: '#abc', fontWeight: 'bold'}}
+                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '1em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms'}}
                 type="text" value={expression} onChange={e => setExpression(e.target.value)}
             />
             {parseError.current && <div style={{color: 'red'}}>{parseError.current.description}</div>}
