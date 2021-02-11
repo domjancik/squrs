@@ -2,7 +2,6 @@ import React from 'react';
 import { FirebaseAppProvider } from 'reactfire';
 import './App.css';
 import firebaseConfig from './firebaseConfig';
-import Squr from './Squr/Squr';
 import SqurFirebase from './Squr/SqurFirebase';
 import { TimeContext } from './Squr/TimeContext';
 import useTime from './useTime';
@@ -15,24 +14,6 @@ const SIDE = `${80 / SQURS_PER_ROW}vmin`
 
 const getXIndex = (index: number, perRow = SQURS_PER_ROW) => index % perRow
 const getYIndex = (index: number, perRow = SQURS_PER_ROW) => Math.round(index / perRow)
-
-const localSqurs = (
-  <>
-    <Squr side={SIDE} init="0"/>
-    <Squr side={SIDE} init="1"/>
-    <Squr side={SIDE} init="t%1"/>
-    <Squr side={SIDE} init="sin(t)"/>
-  </>
-)
-
-const firebaseSqurs = (
-  <>
-    <SqurFirebase side={SIDE} path="/tl"/>
-    <SqurFirebase side={SIDE} path="/tr"/>
-    <SqurFirebase side={SIDE} path="/bl"/>
-    <SqurFirebase side={SIDE} path="/br"/>
-  </>
-)
 
 const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
