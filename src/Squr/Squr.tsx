@@ -33,13 +33,15 @@
 // TODO ...
 
 
-import React, { ReactElement, useContext, useRef, useState } from 'react'
+import React, { ReactElement, useContext, useEffect, useRef, useState } from 'react'
 import useAnimationFrame from './useAnimationFrame'
 
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
 import SqurProps from './SqurProps'
 import { normalizedSin, normalizedSquare, normalizedTriangle } from './functions'
+
+import * as Tone from 'tone'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -96,6 +98,25 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
     const res = typeof exprEvalRes === 'number' ? exprEvalRes : 0 // evalast may return strings, functions, ...
 
     const fontColor = res < 0.5 ? '#abc' : '#444'
+
+
+    // #region AUDIO
+
+    const prevRes = useRef(res)
+    const synth = useRef<Tone.Synth<Tone.SynthOptions> | null>(null)
+    useEffect(() => {
+        if (prevRes.current < 0.5 && res >= 0.5) synth.current?.triggerAttackRelease(`C${variables.i}`, "8n")
+        prevRes.current = res
+    }, [res])
+
+    useEffect(() => {
+        synth.current = new Tone.Synth().toDestination()
+        return () => {
+            synth.current?.disconnect().dispose()
+        }
+    }, [])
+
+    // #endregion
 
     return (
         <div style={
