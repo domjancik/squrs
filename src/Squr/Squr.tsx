@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 
 /**
  * 
@@ -42,6 +43,11 @@ import SqurProps from './SqurProps'
 import { lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle } from './functions'
 
 import * as Tone from 'tone'
+import Visualizer from '../Visualizer/Visualizer'
+import { collect } from 'fp-ts/lib/Record'
+import { pipe } from 'fp-ts/lib/function'
+
+import { css } from '@emotion/react'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -74,7 +80,9 @@ type ParseError = null | {
     description: string
 }
 
-const notes = ['C', 'G', 'D', 'A', 'E']
+// const notes = ['C', 'G', 'D', 'A', 'E']
+// const notes = ['C', 'D', 'E', 'A', 'G']
+const notes = ['C', 'D', 'F', 'G', 'Bb']
 const getNote = (i: number) => {
     const note = notes[i % notes.length]
     const octave = Math.floor(i / notes.length)
@@ -82,6 +90,21 @@ const getNote = (i: number) => {
 }
 // const getNote = (i: number) => `C${i}`
 const getNoteFrequency = (i: number) => Tone.Frequency(getNote(i)).toFrequency()
+
+const renderVariables = (variables: {[key: string]: number}) => {
+    return pipe(
+        variables,
+        collect((key, value) => <span><strong> {key}:</strong>{value}</span>)
+    )
+}
+
+const cssExtra = css`
+    opacity: 0.3;
+    transition: all 500ms;
+    &:hover {
+        opacity: 1;
+    }
+`
 
 function Squr({init, side = 100, expression: expressionExternal, setExpression: setExpressionExternal, variables = {}}: SqurProps   ): ReactElement {
     const time = useContext(TimeContext)
@@ -108,7 +131,8 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
 
 
     const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, stp: normalizedStep, ...variables})
-    const res = typeof exprEvalRes === 'number' ? exprEvalRes : 0 // evalast may return strings, functions, ...
+    const clamp = (x: number) => Math.max(Math.min(x, 1), 0)
+    const res = typeof exprEvalRes === 'number' ? clamp(exprEvalRes) : 0 // evalast may return strings, functions, ...
 
     const fontColor = res < 0.5 ? '#abc' : '#444'
 
@@ -165,7 +189,13 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
                 style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '0.5em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms', maxWidth: '100%', minWidth: '100%', minHeight: '50%', maxHeight: '100%'}}
                 value={expression} onChange={e => setExpression(e.target.value)}
             />
-            {getNote(variables.i)}
+            <div css={cssExtra} style={{color: fontColor}}>
+                <Visualizer value={res} />
+                <div>
+                {getNote(variables.i)}
+                {renderVariables(variables)}
+                </div>
+            </div>
             {parseError.current && <div style={{color: 'red'}}>{parseError.current.description}</div>}
         </div>
     )
