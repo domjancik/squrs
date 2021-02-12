@@ -2,13 +2,14 @@ import React, { useState } from "react"
 import { FirebaseAppProvider } from "reactfire"
 import "./App.css"
 import firebaseConfig from "./firebaseConfig"
+import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 3
+const SQURS_PER_ROW = 4
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
@@ -62,6 +63,7 @@ function App() {
                 gap: "2vmin",
               }}
             >
+              <Help />
               {dynamicFirebaseSqurs}
             </div>
           ) : (
