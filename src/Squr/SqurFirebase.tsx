@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Squr from './Squr'
 
 import 'firebase/database'
@@ -13,15 +13,21 @@ function SqurFirebase({side, path = '/squr', ...rest}: SqurFirebaseProps): React
     const ref = useDatabase().ref(path)
 
     const { data, status } = useDatabaseObjectData<{expr: string}>(ref)
+    
+    // TODO debounce
+    const setExpression = (newExpression: string) => {
+        setLocalExpression(newExpression)
+        ref.set({expr: newExpression})
+    }
 
-    const expression = status === 'success'
-        ? data.expr ?? '.5'
-        : '.5'
-    // TODO debounce, optimistic updates
-    const setExpression = (newExpression: string) => {ref.set({expr: newExpression}); console.log('set')}
+    // Optimistic updates and fix for cursor jumping (https://github.com/facebook/react/issues/955)
+    const [localExpression, setLocalExpression] = useState('.5')
+    useEffect(() => {
+        if (status === 'success' && data.expr !== localExpression) setLocalExpression(data.expr ?? '.5')
+    }, [status, data])
 
     return (
-        <Squr side={side} expression={expression} setExpression={setExpression} {...rest} />
+        <Squr side={side} expression={localExpression} setExpression={setExpression} {...rest} />
     )
 }
 
