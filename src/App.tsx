@@ -6,6 +6,7 @@ import SqurFirebase from './Squr/SqurFirebase';
 import { TimeContext } from './Squr/TimeContext';
 import useTime from './useTime';
 
+// TODO make this also syncd
 const SQURS_PER_ROW = 4
 const SQURS_PER_COL = SQURS_PER_ROW
 
@@ -30,7 +31,7 @@ function App() {
         {/* TODO Redo with minimal grid based centering */}
         {/* TODO gif animation credit */}
         <div style={{display: 'flex', height: '100vh', width: '100vw', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{display: 'grid', gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`, gap: '2em'}}>
+          <div style={{display: 'grid', gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`, gap: '2vmin'}}>
             {dynamicFirebaseSqurs}
           </div>
         </div>

@@ -39,6 +39,7 @@ import useAnimationFrame from './useAnimationFrame'
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
 import SqurProps from './SqurProps'
+import { normalizedSin, normalizedSquare, normalizedTriangle } from './functions'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -88,18 +89,10 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
         parseError.current = e as ParseError
     }
 
-    /**
-     * Sin function normalized to 0-1 cycle input, 0-1 return
-     */
-    const normalizedSin = (x: number) => Math.sin(x * Math.PI * 2) / 2 + 0.5
-
-    /**
-     * input is period
-     */
-    // const timeSin = TODO
+    
 
 
-    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, ...variables})
+    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, ...variables})
     const res = typeof exprEvalRes === 'number' ? exprEvalRes : 0 // evalast may return strings, functions, ...
 
     const fontColor = res < 0.5 ? '#abc' : '#444'
@@ -107,13 +100,13 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
     return (
         <div style={
             {
-                ...{borderRadius: '0.5em', padding: '1em', boxSizing: 'border-box', boxShadow: 'inset 0em -.2em .5em #abc'},
+                ...{borderRadius: '0.5em', padding: '0.5em', boxSizing: 'border-box', boxShadow: 'inset 0em -.2em .5em #abc'},
                 ...sqr(side),
                 ...trns(res),
             }
         }>
             <input
-                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '1em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms'}}
+                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '0.5em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms'}}
                 type="text" value={expression} onChange={e => setExpression(e.target.value)}
             />
             {parseError.current && <div style={{color: 'red'}}>{parseError.current.description}</div>}
