@@ -146,9 +146,9 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
                 ...trns(res),
             }
         }>
-            <input
-                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '0.5em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms'}}
-                type="text" value={expression} onChange={e => setExpression(e.target.value)}
+            <textarea
+                style={{fontFamily: 'monospace', borderRadius: '0.3em', padding: '0.5em', boxSizing: 'border-box', border: 'none', width: '100%', boxShadow: 'inset 0em .2em .5em #abc', background: 'transparent', color: fontColor, fontWeight: 'bold', transition: 'all 300ms', maxWidth: '100%', minWidth: '100%', minHeight: '2em', maxHeight: '100%'}}
+                value={expression} onChange={e => setExpression(e.target.value)}
             />
             {parseError.current && <div style={{color: 'red'}}>{parseError.current.description}</div>}
         </div>
