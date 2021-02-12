@@ -39,7 +39,7 @@ import useAnimationFrame from './useAnimationFrame'
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
 import SqurProps from './SqurProps'
-import { normalizedSin, normalizedSquare, normalizedTriangle } from './functions'
+import { lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle } from './functions'
 
 import * as Tone from 'tone'
 
@@ -94,7 +94,7 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
     
 
 
-    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, ...variables})
+    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, stp: normalizedStep, ...variables})
     const res = typeof exprEvalRes === 'number' ? exprEvalRes : 0 // evalast may return strings, functions, ...
 
     const fontColor = res < 0.5 ? '#abc' : '#444'
@@ -102,10 +102,11 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
 
     // #region AUDIO
 
+    // Trigger notes - didn't sound half bad
     const prevRes = useRef(res)
     const synth = useRef<Tone.Synth<Tone.SynthOptions> | null>(null)
     useEffect(() => {
-        if (prevRes.current < 0.5 && res >= 0.5) synth.current?.triggerAttackRelease(`C${variables.i}`, "8n")
+        if (res - prevRes.current > 0.5) synth.current?.triggerAttackRelease(`C${variables.i}`, "8n")
         prevRes.current = res
     }, [res])
 
@@ -115,6 +116,25 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
             synth.current?.disconnect().dispose()
         }
     }, [])
+
+    const osc = useRef<Tone.Oscillator | null>(null)
+    useEffect(() => {
+        osc.current = new Tone.Oscillator({
+            frequency: 32 * Math.pow(2, variables.i),
+            type: "sawtooth4",
+            volume: -20,
+            detune: Math.random() * 30 - 15,
+        }).toDestination().start()
+        return () => {
+            osc.current?.disconnect().dispose()
+        }
+    }, [])
+
+    useEffect(() => {
+        if (isNaN(res)) return
+        const volumeTarget = res === 0 ? -Infinity : lerp(-80, -40, res)
+        osc.current?.volume.rampTo(volumeTarget, 0.01)
+    }, [res])
 
     // #endregion
 
