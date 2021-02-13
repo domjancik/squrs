@@ -40,7 +40,7 @@ import useAnimationFrame from './useAnimationFrame'
 import { parse, eval as evalast /* avoiding eslint warn */ } from 'expression-eval'
 import { TimeContext } from './TimeContext'
 import SqurProps from './SqurProps'
-import { lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle } from './functions'
+import { lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle, invert } from './functions'
 
 import * as Tone from 'tone'
 import Visualizer from '../Visualizer/Visualizer'
@@ -48,6 +48,7 @@ import { collect } from 'fp-ts/lib/Record'
 import { pipe } from 'fp-ts/lib/function'
 
 import { css } from '@emotion/react'
+import ConfigContext from './ConfigContext'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -82,7 +83,26 @@ type ParseError = null | {
 
 // const notes = ['C', 'G', 'D', 'A', 'E']
 // const notes = ['C', 'D', 'E', 'A', 'G']
-const notes = ['C', 'D', 'F', 'G', 'Bb']
+
+const C = 'C'
+const D = 'D'
+const E = 'E'
+const Eb = 'Eb'
+const F = 'F'
+const G = 'G'
+const A = 'A'
+const Ab = 'Ab'
+const B = 'B'
+const Bb = 'Bb'
+
+const SCALE_5_MAJOR_PENTATONIC = [C, D, E, G, A]
+const SCALE_5_EGYPTIAN_SUSPENDED = [C, D, F, G, Bb]
+// const SCALE_5_BLUES_MINOR_MAN_GONG = [C, Eb, F, Ab, Bb, C]
+const SCALE_5_BLUES_MINOR_MAN_GONG = [C, Eb, F, Ab, Bb]
+const SCALE_5_BLUES_MAJOR_RITSUSEN = [C, D, F, G, A]
+const SCALE_5_MINOR_PENTATONIC = [C, Eb, F, G, Bb]
+const notes = SCALE_5_EGYPTIAN_SUSPENDED
+
 const getNote = (i: number) => {
     const note = notes[i % notes.length]
     const octave = Math.floor(i / notes.length)
@@ -108,6 +128,8 @@ const cssExtra = css`
 
 function Squr({init, side = 100, expression: expressionExternal, setExpression: setExpressionExternal, variables = {}}: SqurProps   ): ReactElement {
     const time = useContext(TimeContext)
+    const { volume } = useContext(ConfigContext)
+
     const [uptime, setUptime] = useState(0)
     useAnimationFrame((time) => {setUptime(ut => ut + time / 1000)})
 
@@ -123,15 +145,14 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
         lastValidAst.current = ast
         parseError.current = null
     } catch(e) {
-        console.error(e)
         parseError.current = e as ParseError
     }
 
     
 
 
-    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, stp: normalizedStep, ...variables})
-    const clamp = (x: number) => Math.max(Math.min(x, 1), 0)
+    const exprEvalRes = evalast(lastValidAst.current, {localTime: uptime, lt: uptime, local_time: uptime, uptime, time, t: time, sin: normalizedSin, tri: normalizedTriangle, sqr: normalizedSquare, stp: normalizedStep, inv: invert, ...variables})
+    const clamp = (x: number) => Math.max(Math.min(x, 1), -1)
     const res = typeof exprEvalRes === 'number' ? clamp(exprEvalRes) : 0 // evalast may return strings, functions, ...
 
     const fontColor = res < 0.5 ? '#abc' : '#444'
@@ -141,10 +162,6 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
     // Trigger notes - didn't sound half bad
     const prevRes = useRef(res)
     const synth = useRef<Tone.Synth<Tone.SynthOptions> | null>(null)
-    useEffect(() => {
-        if (res - prevRes.current > 0.95) synth.current?.triggerAttackRelease(getNote(variables.i), "8n")
-        prevRes.current = res
-    }, [res])
 
     useEffect(() => {
         synth.current = new Tone.Synth().toDestination()
@@ -152,13 +169,21 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
             synth.current?.disconnect().dispose()
         }
     }, [])
+    
+    useEffect(() => {
+        if (res - prevRes.current > 0.95 && synth.current && volume) {
+            synth.current.triggerAttackRelease(getNote(variables.i), "8n", undefined, volume.current)
+        }
+        prevRes.current = res
+    }, [res])
 
     const osc = useRef<Tone.Oscillator | null>(null)
     useEffect(() => {
         osc.current = new Tone.Oscillator({
             // frequency: 32 * Math.pow(2, variables.i),
             frequency: getNoteFrequency(variables.i),
-            type: "sawtooth4",
+            type: "sine",
+            // type: "square",
             volume: -30,
             detune: Math.random() * 30 - 15,
         }).toDestination().start()
@@ -168,9 +193,11 @@ function Squr({init, side = 100, expression: expressionExternal, setExpression: 
     }, [])
 
     useEffect(() => {
-        if (isNaN(res)) return
-        const volumeTarget = res === 0 ? -Infinity : lerp(-80, -20, res)
-        osc.current?.volume.rampTo(volumeTarget, 0.01)
+        if (isNaN(res) || !osc.current || !volume) return
+        const volumeTarget = res === 0 ? -Infinity : lerp(-80, lerp(-30, 15, volume.current), Math.abs(res))
+        
+        osc.current.volume.rampTo(volumeTarget, 0.01)
+        osc.current.type = res > 0 ? 'sine' : 'square'
     }, [res])
 
     // #endregion

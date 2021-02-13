@@ -4,12 +4,13 @@ import "./App.css"
 import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
+import ConfigContextProvider from "./Squr/ConfigContextProvider"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 4
+const SQURS_PER_ROW = 1
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
@@ -43,34 +44,36 @@ function App() {
 
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-      <TimeContext.Provider value={time}>
-        {/* TODO Redo with minimal grid based centering */}
-        {/* TODO gif animation credit */}
-        <div
-          style={{
-            display: "flex",
-            height: "100vh",
-            width: "100vw",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {started ? (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`,
-                gap: "2vmin",
-              }}
-            >
-              <Help />
-              {dynamicFirebaseSqurs}
-            </div>
-          ) : (
-            <Intro onClick={() => setStarted(true)} />
-          )}
-        </div>
-      </TimeContext.Provider>
+      <ConfigContextProvider>
+        <TimeContext.Provider value={time}>
+          {/* TODO Redo with minimal grid based centering */}
+          {/* TODO gif animation credit */}
+          <div
+            style={{
+              display: "flex",
+              height: "100vh",
+              width: "100vw",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {started ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`,
+                  gap: "2vmin",
+                }}
+              >
+                <Help />
+                {dynamicFirebaseSqurs}
+              </div>
+            ) : (
+              <Intro onClick={() => setStarted(true)} />
+            )}
+          </div>
+        </TimeContext.Provider>
+      </ConfigContextProvider>
     </FirebaseAppProvider>
   )
 }

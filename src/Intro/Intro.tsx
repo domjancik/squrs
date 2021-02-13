@@ -20,7 +20,7 @@ function Intro({onClick}: Props): ReactElement {
             <h1>SQUR!</h1>
             <div><Button onClick={onClick}>□□ start □□</Button></div>
             <div>
-                <small>gotta make you click to make sounds, aight</small>
+                <small>gotta make you click to make sounds, aight, domj</small>
             </div>
         </div>
     )
