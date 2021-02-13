@@ -19,7 +19,7 @@ function Visualizer({value}: Props): ReactElement {
     })
 
     const path = valuesState
-        .map((val, index) => `L${index * 1} ${100 - (val * 90 + 5)}`)
+        .map((val, index) => `L${index * 1} ${100 - (Math.abs(val) * 90 + 5)}`)
         .join(' ')
 
     return (
