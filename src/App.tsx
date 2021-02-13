@@ -5,12 +5,13 @@ import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import ConfigContextProvider from "./Squr/ConfigContextProvider"
+import SequencerContent from "./Squr/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 1
+const SQURS_PER_ROW = 3
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
@@ -22,18 +23,22 @@ const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
 
 const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
-  return a.map((_v, index) => (
+  return a.map((_v, index) => {
+    const content = index > 3 ? SequencerContent : undefined
+
+    return (
     <SqurFirebase
       key={index}
       side={SIDE}
       path={`/squrs/${index}`}
+      contentComponent={content}
       variables={{
         i: index + 1,
         x: getXIndex(index) + 1,
         y: getYIndex(index) + 1,
       }}
     />
-  ))
+  )})
 }
 
 const dynamicFirebaseSqurs = makeSqurs(SQURS)
