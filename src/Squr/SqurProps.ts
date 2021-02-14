@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import ContentProps from "./ContentProps";
+import { ExpressionHookFunction } from "./types";
 
 interface SqurProps {
     expression?: string
@@ -11,6 +12,7 @@ interface SqurProps {
     init?: string
     variables?: { [key: string]: number }
     contentComponent?: (props: ContentProps) => ReactElement
+    useExpressionHook?: ExpressionHookFunction
 }
 
 export default SqurProps

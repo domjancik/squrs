@@ -9,9 +9,11 @@ import SequencerContent from "./Squr/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
 import useTime from "./useTime"
+import * as Tone from 'tone'
+import useExpressionSequencer from "./Squr/useExpressionSequencer"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 3
+const SQURS_PER_ROW = 4
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
@@ -24,7 +26,10 @@ const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
 const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
-    const content = index > 3 ? SequencerContent : undefined
+    // const content = index > 3 ? SequencerContent : undefined
+    const isSequencer = index === a.length - 1
+    const content = undefined
+    const processing = isSequencer ? useExpressionSequencer : undefined
 
     return (
     <SqurFirebase
@@ -32,6 +37,7 @@ const makeSqurs = (count: number) => {
       side={SIDE}
       path={`/squrs/${index}`}
       contentComponent={content}
+      useExpressionHook={processing}
       variables={{
         i: index + 1,
         x: getXIndex(index) + 1,
@@ -74,7 +80,11 @@ function App() {
                 {dynamicFirebaseSqurs}
               </div>
             ) : (
-              <Intro onClick={() => setStarted(true)} />
+              <Intro onClick={() => {
+                setStarted(true)
+                Tone.start()
+                Tone.Transport.start()
+              }} />
             )}
           </div>
         </TimeContext.Provider>

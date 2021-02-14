@@ -22,7 +22,7 @@ const cssExtra = css`
     }
 `
 
-function ExpressionContent({expression, setExpression, res, fontColor, variables, error}: ContentProps): ReactElement {
+function ExpressionContent({expression, setExpression, res, fontColor, variables, error, instrumentName}: ContentProps): ReactElement {
     return (
         <>
             <textarea
@@ -35,6 +35,8 @@ function ExpressionContent({expression, setExpression, res, fontColor, variables
                 {getNote(variables?.i || 0)}
                 {renderVariables(variables || {})}
                 </div>
+                
+                <div style={{color: fontColor, fontSize: '2em'}}>{instrumentName}</div>
             </div>
             {error && <div style={{color: 'red'}}>{error.description}</div>}
         </>

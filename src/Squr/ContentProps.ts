@@ -7,6 +7,7 @@ interface ContentProps {
     fontColor: string
     variables?: { [key: string]: number }
     error: ParseError
+    instrumentName?: string
 }
 
 export default ContentProps

@@ -21,7 +21,7 @@ const SCALE_5_BLUES_MINOR_MAN_GONG = [C, Eb, F, Ab, Bb]
 const SCALE_5_BLUES_MAJOR_RITSUSEN = [C, D, F, G, A]
 const SCALE_5_MINOR_PENTATONIC = [C, Eb, F, G, Bb]
 const SCALE_4_TONEJS_SEQUENCER_EXAMPLE = [A, 'Db', E, 'Gb']
-const notes = SCALE_4_TONEJS_SEQUENCER_EXAMPLE
+const notes = SCALE_5_EGYPTIAN_SUSPENDED
 
 const getNote = (i: number) => {
     const note = notes[i % notes.length]

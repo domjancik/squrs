@@ -7,14 +7,10 @@ import { invert, lerp, normalizedSin, normalizedSquare, normalizedStep, normaliz
 import { getNote, getNoteFrequency } from './notes'
 import ParseError from './ParseError'
 import { TimeContext } from './TimeContext'
+import { ExpressionHookFunction } from './types'
 import useAnimationFrame from './useAnimationFrame'
 
-
-
-
-
-
-function useExpressionWithSound(expression: string, variables?: { [key: string]: number }) {
+const useExpressionWithSound: ExpressionHookFunction = (expression: string, variables?: { [key: string]: number }) => {
     const time = useContext(TimeContext)
     const { volume } = useContext(ConfigContext)
 
@@ -79,13 +75,13 @@ function useExpressionWithSound(expression: string, variables?: { [key: string]:
 
     useEffect(() => {
         if (isNaN(res) || !osc.current || !volume) return
-        const volumeTarget = res === 0 ? -Infinity : lerp(-30, lerp(-30, 15, volume.current), Math.abs(res))
+        const volumeTarget = res === 0 ? -Infinity : lerp(-30, lerp(-30, 0, volume.current), Math.abs(res))
         
         osc.current.volume.rampTo(volumeTarget, 0.01)
         osc.current.type = res > 0 ? 'sine' : 'square'
     }, [res])
 
-    return { res, parseError: parseError.current }
+    return { res, error: parseError.current, instrumentName: 'synth' }
 }
 
 export default useExpressionWithSound
