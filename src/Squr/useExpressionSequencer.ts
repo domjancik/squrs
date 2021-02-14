@@ -31,7 +31,6 @@ const useExpressionSequencer: ExpressionHookFunction = (expression: string, vari
             if (playing) noise.current?.start(time).stop("+32n");
         }, "8n").start(0);
         
-        console.log(Tone.Transport.bpm.value)
         return () => {
             noise.current?.dispose()
             loopA.dispose()

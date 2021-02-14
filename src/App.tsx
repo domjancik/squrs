@@ -1,16 +1,15 @@
 import React, { useState } from "react"
 import { FirebaseAppProvider } from "reactfire"
+import * as Tone from 'tone'
 import "./App.css"
 import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import ConfigContextProvider from "./Squr/ConfigContextProvider"
-import SequencerContent from "./Squr/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
-import useTime from "./useTime"
-import * as Tone from 'tone'
 import useExpressionSequencer from "./Squr/useExpressionSequencer"
+import useTime from "./useTime"
 
 // TODO make this also syncd
 const SQURS_PER_ROW = 4
@@ -27,7 +26,7 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
     // const content = index > 3 ? SequencerContent : undefined
-    const isSequencer = index === a.length - 1
+    const isSequencer = index === a.length 
     const content = undefined
     const processing = isSequencer ? useExpressionSequencer : undefined
 
