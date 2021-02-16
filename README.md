@@ -25,7 +25,8 @@ yarn start
     ```
 2. create a [firebase](https://console.firebase.google.com/?pli=1) app
 3. copy the provided config into `src/firebaseConfig.ts` (see `src/firebaseConfig.ts.md` for reference)
-4. yarn install
+4.  ``` bash
+    yarn install
     yarn start
     ```
 
@@ -33,8 +34,11 @@ yarn start
 #### Expression variables
 
 `t` - running time in seconds, aliases `time`
+
 `i` - index of squr (starting from 1, row by row)
-`x` - position of current squr x axis (starting from 1)  
+
+`x` - position of current squr x axis (starting from 1) 
+
 `y` - position of current squr y axis (starting from 1)
 
 #### Expression functions
@@ -45,8 +49,14 @@ all expressions are normlized (input 0-1, output 0-1)
 x 0-1 for full cycle, output between 0-1
 
 `sin(x)` - ~ sine
+
 'tri(x)` - /\ triangle
-`sqr(x)` - ┌┐ square
+
+`sqr(x, [phase])` - ┌┐ square
+
+##### Sequencers
+
+stp(x, ...steps)
 
 #### Example expressions
 `sin(t*0.01)` - run a sin wave based on the running time multiplied by a float to control rate
