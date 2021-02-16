@@ -6,6 +6,7 @@ import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import ConfigContextProvider from "./Squr/ConfigContextProvider"
+import SequencerContent from "./Squr/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
 import useExpressionSequencer from "./Squr/useExpressionSequencer"
@@ -26,8 +27,10 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
     // const content = index > 3 ? SequencerContent : undefined
-    const isSequencer = index === a.length 
-    const content = undefined
+    const isSequencer = index > a.length  - 3
+    // const isSequencer = index > 1 
+    // const isSequencer = false
+    const content = isSequencer ? SequencerContent : undefined
     const processing = isSequencer ? useExpressionSequencer : undefined
 
     return (

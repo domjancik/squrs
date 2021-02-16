@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 const useExpressionSequencer: ExpressionHookFunction = (expression: string, variables?: { [key: string]: number }) => {
     const steps = useRef<number[]>([0])
+    const [step, setStep] = useState(0)
 
     useEffect(() => {
         const mappedSteps = expression.split(',').map(str => {
@@ -20,14 +21,16 @@ const useExpressionSequencer: ExpressionHookFunction = (expression: string, vari
     const noise = useRef<Tone.Noise | null>(null)
     useEffect(() => {
         noise.current = new Tone.Noise("white").toDestination()
-        noise.current.volume.rampTo(-20, 0)
+        noise.current.volume.rampTo(-30, 0)
 
         const loopA = new Tone.Loop(time => {
-            const currentStep = steps.current[Math.round(time * 4) % steps.current.length]
+            const stepIndex = Math.round(time * 4) % steps.current.length
+            const currentStep = steps.current[stepIndex]
+            setStep(stepIndex)
             
             const playing = currentStep >= Math.random()
 
-            setRes(playing ? 1 : 0)
+            setRes(playing ? 0.5 : 0)
             if (playing) noise.current?.start(time).stop("+32n");
         }, "8n").start(0);
         
@@ -37,7 +40,7 @@ const useExpressionSequencer: ExpressionHookFunction = (expression: string, vari
         }
     }, [])
 
-    return { res, error: null, instrumentName: 'sequencer' }
+    return { res, error: null, instrumentName: 'sequencer', extra: {step} }
 
 }
 

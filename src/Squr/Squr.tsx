@@ -63,7 +63,7 @@ function Squr({
 
   // const { res, error, instrumentName } = useExpressionWithSound(expression, variables)
   // const { res, error, instrumentName } = useExpressionSequencer(expression, variables)
-  const { res, error, instrumentName } = useExpressionHook(expression, variables)
+  const { res, error, instrumentName, extra } = useExpressionHook(expression, variables)
 
   const fontColor = res < 0.5 ? "#abc" : "#444"
   const color = res > 0 ? trns(res) : black(-res)
@@ -73,6 +73,7 @@ function Squr({
   return (
     <EmptySqur color={color} side={side}>
       <ContentComponent
+        side={side}
         expression={expression}
         setExpression={setExpression}
         res={res}
@@ -80,6 +81,7 @@ function Squr({
         variables={variables}
         error={error}
         instrumentName={instrumentName}
+        extra={extra}
       />
     </EmptySqur>
   )
