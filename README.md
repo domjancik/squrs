@@ -54,5 +54,6 @@ x 0-1 for full cycle, output between 0-1
 stp(x, ...steps)
 
 #### Example expressions
-`sin(t*0.01)` - run a sin wave based on the running time multiplied by a float to control rate
+`sin(t*0.01)` - run a sine wave based on the running time multiplied by a float to control rate
 
+`sqr(stp(t/4, sin(t/2), t*2))` - a square wave with changing speeds
