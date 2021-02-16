@@ -14,11 +14,6 @@ valid values are between -1 and 1
 
 ### local install
 
-``` bash
-git clone https://github.com/domjancik/squrs.git && cd squrs
-yarn install
-yarn start
-```
 
 1. ``` bash
     git clone https://github.com/domjancik/squrs.git && cd squrs
