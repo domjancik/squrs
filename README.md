@@ -59,5 +59,6 @@ stp(x, ...steps)
 `sqr(stp(t/4, sin(t/2), t*2))` - a square wave with changing speeds
 
 
-where next?
+### where next?
+
 https://discord.gg/Q27rcfd
