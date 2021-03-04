@@ -57,3 +57,7 @@ stp(x, ...steps)
 `sin(t*0.01)` - run a sine wave based on the running time multiplied by a float to control rate
 
 `sqr(stp(t/4, sin(t/2), t*2))` - a square wave with changing speeds
+
+
+where next?
+https://discord.gg/Q27rcfd
