@@ -9,7 +9,7 @@ color and sound of each squr is computed by its assigned expression
 
 valid values are between -1 and 1
 
-[try it out](http://domjancik.github.io/squrs) (Currently down, run locally)
+[try it out](http://domjancik.github.io/squrs)
 
 
 ### local install
