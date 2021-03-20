@@ -26,7 +26,7 @@ const notes = SCALE_5_EGYPTIAN_SUSPENDED
 const getNote = (i: number) => {
     const note = notes[i % notes.length]
     const octave = Math.floor(i / notes.length)
-    return `${note}${octave + 2}`
+    return `${note}${octave + 3}`
 }
 // const getNote = (i: number) => `C${i}`
 const getNoteFrequency = (i: number) => Tone.Frequency(getNote(i)).toFrequency()
