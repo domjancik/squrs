@@ -26,20 +26,11 @@ const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
 const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
-    // const content = index > 3 ? SequencerContent : undefined
-    // const isSequencer = index > a.length  - 3
-    // const isSequencer = index > 1 
-    const isSequencer = true
-    const content = isSequencer ? SequencerContent : undefined
-    const processing = isSequencer ? useExpressionSequencer : undefined
-
     return (
     <SqurFirebase
       key={index}
       side={SIDE}
       path={`/squrs/${index}`}
-      contentComponent={content}
-      useExpressionHook={processing}
       variables={{
         i: index + 1,
         x: getXIndex(index) + 1,

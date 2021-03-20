@@ -30,7 +30,6 @@ import React, { ReactElement, useState } from "react"
 import EmptySqur from "./EmptySqur"
 import ExpressionContent from "./instruments/Expression/ExpressionContent"
 import SqurProps from "./SqurProps"
-import useExpressionSequencer from "./instruments/Sequencer/useExpressionSequencer"
 import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound"
 
 // const COLOR = '#72dec2'
@@ -61,8 +60,6 @@ function Squr({
   const expression = expressionExternal ?? expressionInternal
   const setExpression = setExpressionExternal ?? setExpressionInternal
 
-  // const { res, error, instrumentName } = useExpressionWithSound(expression, variables)
-  // const { res, error, instrumentName } = useExpressionSequencer(expression, variables)
   const { res, error, instrumentName, extra } = useExpressionHook(expression, variables)
 
   const fontColor = res < 0.5 ? "#abc" : "#444"
