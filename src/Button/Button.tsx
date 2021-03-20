@@ -15,6 +15,8 @@ const cssSqur = css`
     background: transparent;
     color: #abc;
     border: none;
+    font-family: 'JetBrains Mono', monospace;
+
     /* transition: all 100ms; */
 
     &:hover {

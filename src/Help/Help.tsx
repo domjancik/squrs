@@ -35,15 +35,15 @@ const variables: HelpItem[] = [
     },
     {
         title: 'i',
-        value: 'index of squr - 1, 2, 3...'
+        value: 'index of squr - 0, 1, 2... use i1 for 1-indexed'
     },
     {
         title: 'x',
-        value: 'x index of squr'
+        value: 'x index of squr, use x1 for 1-indexed'
     },
     {
         title: 'y',
-        value: 'y index of squr'
+        value: 'y index of squr, use y1 for 1-indexed'
     },
 ]
 
@@ -72,11 +72,12 @@ const renderHelpItems = (items: HelpItem[]) => {
 }
 
 function Help({}: Props): ReactElement {
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
 
     const helpContent = (<div css={cssHelpContent}>
-                <p>make the squrs sing and shine with math expressions</p>
+                <p>make the squrs sing and shine with math expressions and clicks</p>
                 <p>all is syncd, tell friends</p>
+                <p>RIGHT CLICK switches instruments</p>
                 <h3>Variables</h3>
                 {renderHelpItems(variables)}
                 <h3>Functions</h3>
@@ -86,7 +87,7 @@ function Help({}: Props): ReactElement {
     return (
         <div css={cssHelp}>
             <div>
-                <Button onClick={() => setOpen(o => !o)}>?</Button>
+                <Button onClick={() => setOpen(o => !o)}>Help pls</Button>
             </div>
             {open && helpContent}
         </div>
