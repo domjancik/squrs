@@ -1,6 +1,7 @@
 import { ExpressionHookFunction } from "../../types";
 import * as Tone from 'tone'
 import { useEffect, useRef, useState } from "react";
+import { getNote } from "../../notes";
 
 
 const useExpressionSequencer: ExpressionHookFunction = (expression, setExpression, variables) => {
@@ -21,9 +22,9 @@ const useExpressionSequencer: ExpressionHookFunction = (expression, setExpressio
 
     const [res, setRes] = useState(0)
 
-    const noise = useRef<Tone.MembraneSynth | null>(null)
+    const noise = useRef<Tone.Synth | null>(null)
     useEffect(() => {
-        noise.current = new Tone.MembraneSynth().toDestination()
+        noise.current = new Tone.Synth().toDestination()
         noise.current.volume.rampTo(-30, 0)
 
         const loopA = new Tone.Loop(time => {
@@ -33,9 +34,9 @@ const useExpressionSequencer: ExpressionHookFunction = (expression, setExpressio
             
             const playing = currentStep >= Math.random()
 
-            setRes(playing ? 0.5 : 0)
+            setRes(playing ? 1 : 0)
             // if (playing) noise.current?.start(time).stop("+32n");
-            if (playing) noise.current?.triggerAttackRelease("C4", "32n");
+            if (playing) noise.current?.triggerAttackRelease(getNote(variables?.i || 0), "8n", time);
         }, "8n").start(0);
         
         return () => {
