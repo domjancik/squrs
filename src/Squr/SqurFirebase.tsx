@@ -11,6 +11,8 @@ interface SqurFirebaseProps extends Omit<SqurProps, 'expression' | 'setExpressio
     path?: string
 }
 
+const DEFAULT_EXPRESSION = '0'
+
 function SqurFirebase({side = 100, path = '/squr', ...rest}: SqurFirebaseProps): ReactElement {
     const ref = useDatabase().ref(path)
 
@@ -23,12 +25,15 @@ function SqurFirebase({side = 100, path = '/squr', ...rest}: SqurFirebaseProps):
     }
 
     // Optimistic updates and fix for cursor jumping (https://github.com/facebook/react/issues/955)
-    const [localExpression, setLocalExpression] = useState('0')
+    const [localExpression, setLocalExpression] = useState<string | undefined>(undefined)
     useEffect(() => {
-        if (status === 'success' && data.expr !== localExpression) setLocalExpression(data.expr ?? '0')
+        if (status === 'success') {
+            const expr = data.expr ?? DEFAULT_EXPRESSION
+            if (expr !== localExpression) setLocalExpression(expr)
+        }
     }, [status, data])
 
-    if (status !== 'success') {
+    if (!localExpression || status !== 'success') {
         return <EmptySqur side={side} color={{background: 'white'}}>{status}</EmptySqur>
     }
 
