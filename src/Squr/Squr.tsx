@@ -53,8 +53,9 @@ function Squr({
   expression: expressionExternal,
   setExpression: setExpressionExternal,
   variables = {},
+  toggleInstrument,
   contentComponent = ExpressionContent,
-  useExpressionHook = useExpressionWithSound
+  useExpressionHook = useExpressionWithSound,
 }: SqurProps): ReactElement {
   const [expressionInternal, setExpressionInternal] = useState(init || "0")
   const expression = expressionExternal ?? expressionInternal
@@ -67,8 +68,13 @@ function Squr({
 
   const ContentComponent = contentComponent
 
+  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    toggleInstrument()
+  }
+
   return (
-    <EmptySqur color={color} side={side}>
+    <EmptySqur color={color} side={side} onContextMenu={handleContextMenu}>
       <ContentComponent
         side={side}
         expression={expression}
