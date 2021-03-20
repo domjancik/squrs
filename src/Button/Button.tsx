@@ -15,7 +15,7 @@ const cssSqur = css`
     background: transparent;
     color: #abc;
     border: none;
-    transition: all 500ms;
+    /* transition: all 100ms; */
 
     &:hover {
         box-shadow: inset 0em .2em .5em #abc;
