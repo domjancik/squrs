@@ -7,8 +7,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background: url('https://media.giphy.com/media/U3qYN8S0j3bpK/giphy.gif');
-  background-size: contain;
+  /* background: url('https://media.giphy.com/media/U3qYN8S0j3bpK/giphy.gif'); */
+  /* background-size: contain; */
+  background: black;
 }
 
 code {
