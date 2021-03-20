@@ -55,7 +55,7 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
             frequency: getNoteFrequency(variables?.i || 0),
             type: "sine",
             // type: "square",
-            volume: -30,
+            volume: -60,
             detune: Math.random() * 30 - 15,
         }).toDestination().start()
 
@@ -73,7 +73,7 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
             prevRes.current = resRef.current
 
             if (isNaN(resRef.current) || !osc.current || !volume) return
-            const volumeTarget = resRef.current === 0 ? -Infinity : lerp(-30, lerp(-30, 0, volume.current), Math.abs(resRef.current))
+            const volumeTarget = resRef.current === 0 ? -Infinity : lerp(-60, lerp(-60, 0, volume.current), Math.abs(resRef.current))
             
             osc.current.volume.rampTo(volumeTarget, 0.06, time)
             // osc.current.type = resRef.current >= 0 ? 'sine' : 'square'
