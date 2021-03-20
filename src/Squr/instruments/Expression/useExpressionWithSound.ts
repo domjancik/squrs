@@ -35,20 +35,18 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
 
     // #region AUDIO
 
-    // Trigger notes - didn't sound half bad
-    const prevRes = useRef(0)
-    const synth = useRef<Tone.Synth<Tone.SynthOptions> | null>(null)
-
+    // const prevRes = useRef(0)
     const resRef = useRef(0)
-
-    useEffect(() => {
-        synth.current = new Tone.Synth().toDestination()
-        return () => {
-            synth.current?.disconnect().dispose()
-        }
-    }, [])
     
-    const osc = useRef<Tone.Oscillator | null>(null)
+    // Trigger notes - didn't sound half bad
+    // const synth = useRef<Tone.Synth<Tone.SynthOptions> | null>(null)
+    // useEffect(() => {
+    //     synth.current = new Tone.Synth().toDestination()
+    //     return () => {
+    //         synth.current?.disconnect().dispose()
+    //     }
+    // }, [])
+
     useEffect(() => {
         osc.current = new Tone.Oscillator({
             // frequency: 32 * Math.pow(2, variables.i),
@@ -59,6 +57,13 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
             detune: Math.random() * 30 - 15,
         }).toDestination().start()
 
+        return () => {
+            osc.current?.dispose()
+        }
+    }, [])
+    
+    const osc = useRef<Tone.Oscillator | null>(null)
+    useEffect(() => {
         const clamp = (x: number) => Math.max(Math.min(x, 1), -1)
 
         const loop = new Tone.Loop(time => {
@@ -67,19 +72,18 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
             resRef.current = typeof exprEvalRes === 'number' ? clamp(exprEvalRes) : 0 // evalast may return strings, functions, ...
             // resRef.current = Math.sin(time) / 2 + 0.5
 
-            if (resRef.current - prevRes.current > 0.95 && synth.current && volume) {
-                synth.current.triggerAttackRelease(getNote(variables?.i || 0), "8n", time, volume.current)
-            }
-            prevRes.current = resRef.current
+            // if (resRef.current - prevRes.current > 0.95 && synth.current && volume) {
+            //     synth.current.triggerAttackRelease(getNote(variables?.i || 0), "8n", time, volume.current)
+            // }
+            // prevRes.current = resRef.current
 
             if (isNaN(resRef.current) || !osc.current || !volume) return
-            const volumeTarget = resRef.current === 0 ? -Infinity : lerp(-60, lerp(-60, 0, volume.current), Math.abs(resRef.current))
+            const volumeTarget = resRef.current === 0 ? -Infinity : lerp(-60, lerp(-60, -40, volume.current), Math.abs(resRef.current))
             
             osc.current.volume.rampTo(volumeTarget, 0.06, time)
-            // osc.current.type = resRef.current >= 0 ? 'sine' : 'square'
+            osc.current.type = resRef.current >= 0 ? 'sine' : 'square'
             
         }, "0.03").start(0);
-
 
         return () => {
             osc.current?.dispose()
@@ -87,7 +91,7 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
         }
     }, [])
 
-    return { res, error: parseError.current, instrumentName: 'synth' }
+    return { res: Math.abs(res), error: parseError.current, instrumentName: 'expsyn' }
 }
 
 export default useExpressionWithSound
