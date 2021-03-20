@@ -82,7 +82,7 @@ const useExpressionWithSound: ExpressionHookFunction = (expression, setExpressio
 
 
         return () => {
-            osc.current?.disconnect().dispose()
+            osc.current?.dispose()
             loop.dispose()
         }
     }, [])
