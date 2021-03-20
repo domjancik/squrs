@@ -22,10 +22,10 @@ const useExpressionSequencer: ExpressionHookFunction = (expression, setExpressio
 
     const [res, setRes] = useState(0)
 
-    const noise = useRef<Tone.Synth | null>(null)
+    const synth = useRef<Tone.Synth | null>(null)
     useEffect(() => {
-        noise.current = new Tone.Synth().toDestination()
-        noise.current.volume.rampTo(-30, 0)
+        synth.current = new Tone.Synth().toDestination()
+        synth.current.volume.rampTo(-30, 0)
 
         const loopA = new Tone.Loop(time => {
             const stepIndex = Math.round(time * 4) % steps.current.length
@@ -35,12 +35,12 @@ const useExpressionSequencer: ExpressionHookFunction = (expression, setExpressio
             const playing = currentStep >= Math.random()
 
             setRes(playing ? 1 : 0)
-            // if (playing) noise.current?.start(time).stop("+32n");
-            if (playing) noise.current?.triggerAttackRelease(getNote(variables?.i || 0), "8n", time);
+            // if (playing) synth.current?.start(time).stop("+32n");
+            if (playing) synth.current?.triggerAttackRelease(getNote(variables?.i || 0), "8n", time);
         }, "8n").start(0);
         
         return () => {
-            noise.current?.dispose()
+            synth.current?.dispose()
             loopA.dispose()
         }
     }, [])
