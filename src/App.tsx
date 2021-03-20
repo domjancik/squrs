@@ -11,7 +11,7 @@ import { TimeContext } from "./Squr/TimeContext"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 3
+const SQURS_PER_ROW = 4
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
