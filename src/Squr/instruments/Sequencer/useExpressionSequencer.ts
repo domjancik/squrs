@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 import { useEffect, useRef, useState } from "react";
 
 
-const useExpressionSequencer: ExpressionHookFunction = (expression: string, variables?: { [key: string]: number }) => {
+const useExpressionSequencer: ExpressionHookFunction = (expression, setExpression, variables) => {
     const steps = useRef<number[]>([0])
     const [step, setStep] = useState(0)
 
@@ -14,7 +14,10 @@ const useExpressionSequencer: ExpressionHookFunction = (expression: string, vari
         })
 
         steps.current = mappedSteps || [0]
-    }, [expression])
+        if (steps.current.length < 16) {
+            setExpression('0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+        }
+    }, [expression, setExpression])
 
     const [res, setRes] = useState(0)
 

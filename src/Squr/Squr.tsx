@@ -60,7 +60,7 @@ function Squr({
   const expression = expressionExternal ?? expressionInternal
   const setExpression = setExpressionExternal ?? setExpressionInternal
 
-  const { res, error, instrumentName, extra } = useExpressionHook(expression, variables)
+  const { res, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
 
   const fontColor = res < 0.5 ? "#abc" : "#444"
   const color = res > 0 ? trns(res) : black(-res)

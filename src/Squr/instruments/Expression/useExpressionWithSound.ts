@@ -9,18 +9,13 @@ import ParseError from '../../ParseError'
 import { ExpressionHookFunction } from '../../types'
 import useAnimationFrame from '../../useAnimationFrame'
 
-const useExpressionWithSound: ExpressionHookFunction = (expression: string, variables?: { [key: string]: number }) => {
+const useExpressionWithSound: ExpressionHookFunction = (expression, setExpression, variables) => {
     const { volume } = useContext(ConfigContext)
     const [res, setRes] = useState(0)
 
-    // const [uptime, setUptime] = useState(0)
-    // useAnimationFrame((time) => {setUptime(ut => ut + time / 1000)})
-    useAnimationFrame((time) => {
+    useAnimationFrame((_time) => {
         setRes(resRef.current)
-        // setUptime(ut => ut + time / 1000)
     })
-
-    
     
     // const lastValidAst = useRef(parse('0'))
     const lastValidCompiled = useRef<(context: object) => any>(() => {return 0.5})
