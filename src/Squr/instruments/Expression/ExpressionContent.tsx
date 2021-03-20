@@ -3,9 +3,9 @@ import { css } from '@emotion/react'
 import { pipe } from 'fp-ts/lib/function'
 import { collect } from 'fp-ts/lib/Record'
 import React, { ReactElement } from 'react'
-import Visualizer from '../Visualizer/Visualizer'
-import ContentProps from './ContentProps'
-import { getNote } from './notes'
+import Visualizer from '../../../Visualizer/Visualizer'
+import ContentProps from '../../ContentProps'
+import { getNote } from '../../notes'
 
 const renderVariables = (variables: {[key: string]: number}) => {
     return pipe(

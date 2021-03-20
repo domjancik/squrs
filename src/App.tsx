@@ -6,14 +6,14 @@ import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import ConfigContextProvider from "./Squr/ConfigContextProvider"
-import SequencerContent from "./Squr/SequencerContent"
+import SequencerContent from "./Squr/instruments/Sequencer/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
-import useExpressionSequencer from "./Squr/useExpressionSequencer"
+import useExpressionSequencer from "./Squr/instruments/Sequencer/useExpressionSequencer"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 4
+const SQURS_PER_ROW = 1
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
@@ -27,9 +27,9 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
     // const content = index > 3 ? SequencerContent : undefined
-    const isSequencer = index > a.length  - 3
+    // const isSequencer = index > a.length  - 3
     // const isSequencer = index > 1 
-    // const isSequencer = false
+    const isSequencer = true
     const content = isSequencer ? SequencerContent : undefined
     const processing = isSequencer ? useExpressionSequencer : undefined
 

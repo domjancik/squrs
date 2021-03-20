@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import Button from '../Button/Button'
-import ContentProps from './ContentProps'
+import Button from '../../../Button/Button'
+import ContentProps from './../../ContentProps'
 
 function SequencerToggle({ value, onClick, side, active }: { value: number, onClick: () => void, side: string | number, active: boolean }) {
     // const label = on ? '♥' : '🖤'

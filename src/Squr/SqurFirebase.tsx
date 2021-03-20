@@ -4,12 +4,13 @@ import Squr from './Squr'
 import 'firebase/database'
 import { useDatabase, useDatabaseObjectData } from 'reactfire'
 import SqurProps from './SqurProps'
+import EmptySqur from './EmptySqur'
 
 interface SqurFirebaseProps extends Omit<SqurProps, 'expression' | 'setExpression'> {
     path?: string
 }
 
-function SqurFirebase({side, path = '/squr', ...rest}: SqurFirebaseProps): ReactElement {
+function SqurFirebase({side = 100, path = '/squr', ...rest}: SqurFirebaseProps): ReactElement {
     const ref = useDatabase().ref(path)
 
     const { data, status } = useDatabaseObjectData<{expr: string}>(ref)
@@ -25,6 +26,10 @@ function SqurFirebase({side, path = '/squr', ...rest}: SqurFirebaseProps): React
     useEffect(() => {
         if (status === 'success' && data.expr !== localExpression) setLocalExpression(data.expr ?? '.5')
     }, [status, data])
+
+    if (status !== 'success') {
+        return <EmptySqur side={side} color={{background: 'white'}}>{status}</EmptySqur>
+    }
 
     return (
         <Squr side={side} expression={localExpression} setExpression={setExpression} {...rest} />

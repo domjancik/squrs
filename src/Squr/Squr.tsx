@@ -28,10 +28,10 @@
 
 import React, { ReactElement, useState } from "react"
 import EmptySqur from "./EmptySqur"
-import ExpressionContent from "./ExpressionContent"
+import ExpressionContent from "./instruments/Expression/ExpressionContent"
 import SqurProps from "./SqurProps"
-import useExpressionSequencer from "./useExpressionSequencer"
-import useExpressionWithSound from "./useExpressionWithSound"
+import useExpressionSequencer from "./instruments/Sequencer/useExpressionSequencer"
+import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound"
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'

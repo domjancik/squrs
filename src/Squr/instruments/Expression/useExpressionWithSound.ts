@@ -2,12 +2,12 @@
 import { compile, parse } from 'expression-eval'
 import { useContext, useEffect, useRef, useState } from 'react'
 import * as Tone from 'tone'
-import ConfigContext from './ConfigContext'
-import { invert, lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle } from './functions'
-import { getNote, getNoteFrequency } from './notes'
-import ParseError from './ParseError'
-import { ExpressionHookFunction } from './types'
-import useAnimationFrame from './useAnimationFrame'
+import ConfigContext from '../../ConfigContext'
+import { invert, lerp, normalizedSin, normalizedSquare, normalizedStep, normalizedTriangle } from '../../functions'
+import { getNote, getNoteFrequency } from '../../notes'
+import ParseError from '../../ParseError'
+import { ExpressionHookFunction } from '../../types'
+import useAnimationFrame from '../../useAnimationFrame'
 
 const useExpressionWithSound: ExpressionHookFunction = (expression: string, variables?: { [key: string]: number }) => {
     const { volume } = useContext(ConfigContext)
