@@ -6,14 +6,12 @@ import firebaseConfig from "./firebaseConfig"
 import Help from "./Help/Help"
 import Intro from "./Intro/Intro"
 import ConfigContextProvider from "./Squr/ConfigContextProvider"
-import SequencerContent from "./Squr/instruments/Sequencer/SequencerContent"
 import SqurFirebase from "./Squr/SqurFirebase"
 import { TimeContext } from "./Squr/TimeContext"
-import useExpressionSequencer from "./Squr/instruments/Sequencer/useExpressionSequencer"
 import useTime from "./useTime"
 
 // TODO make this also syncd
-const SQURS_PER_ROW = 1
+const SQURS_PER_ROW = 3
 const SQURS_PER_COL = SQURS_PER_ROW
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL
