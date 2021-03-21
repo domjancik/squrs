@@ -15,7 +15,7 @@ const SQURS_PER_ROW = 4;
 const SQURS_PER_COL = SQURS_PER_ROW;
 
 const SQURS = SQURS_PER_ROW * SQURS_PER_COL;
-const SIDE = `${80 / SQURS_PER_ROW}vmin`;
+const SIDE = `${86 / SQURS_PER_ROW}vmin`;
 
 const getXIndex = (index: number, perRow = SQURS_PER_ROW) => index % perRow;
 const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
@@ -28,7 +28,7 @@ const makeSqurs = (count: number) => {
       <SqurFirebase
         key={index}
         side={SIDE}
-        path={`/squrs/${index}`}
+        path={`/rooms/ninatami/${index}`}
         variables={{
           i: index,
           i1: index + 1,
@@ -68,11 +68,12 @@ function App() {
                 style={{
                   display: "grid",
                   gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`,
-                  gap: "2vmin",
+                  gap: "0vmin",
                 }}
               >
-                <Help />
+                {/* <Help /> */}
                 {dynamicFirebaseSqurs}
+                <div className="overlay"></div>
               </div>
             ) : (
               <Intro

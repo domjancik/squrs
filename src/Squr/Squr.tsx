@@ -26,16 +26,17 @@
 // TODO keyboard func ~ key.a / key('a') / variable for few special keys / gamepad
 // TODO ...
 
-import React, { ReactElement, useState } from "react"
-import EmptySqur from "./EmptySqur"
-import ExpressionContent from "./instruments/Expression/ExpressionContent"
-import SqurProps from "./SqurProps"
-import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound"
+import React, { ReactElement, useState } from "react";
+import EmptySqur from "./EmptySqur";
+import ExpressionContent from "./instruments/Expression/ExpressionContent";
+import SqurProps from "./SqurProps";
+import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound";
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
 // const COLOR_RGB = '255, 0, 255'
-const COLOR_RGB = "170, 187, 204"
+const COLOR_RGB = "255, 255, 255";
+// const COLOR_RGB = "170, 187, 204"
 
 // const com = (a: any[]) => a.map(e => e.toString()).join(',')
 
@@ -44,8 +45,8 @@ const COLOR_RGB = "170, 187, 204"
 //     return {background: `rgb(${com([v, v, v])})`}
 // }
 
-const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` })
-const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` })
+const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` });
+const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` });
 
 function Squr({
   init,
@@ -57,24 +58,29 @@ function Squr({
   contentComponent = ExpressionContent,
   useExpressionHook = useExpressionWithSound,
 }: SqurProps): ReactElement {
-  const [expressionInternal, setExpressionInternal] = useState(init || "0")
-  const expression = expressionExternal ?? expressionInternal
-  const setExpression = setExpressionExternal ?? setExpressionInternal
+  const [expressionInternal, setExpressionInternal] = useState(init || "0");
+  const expression = expressionExternal ?? expressionInternal;
+  const setExpression = setExpressionExternal ?? setExpressionInternal;
 
-  const { res, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
+  const { res, error, instrumentName, extra } = useExpressionHook(
+    expression,
+    setExpression,
+    variables
+  );
 
-  const fontColor = res < 0.5 ? "#abc" : "#444"
-  const color = res > 0 ? trns(res) : black(-res)
+  const fontColor = res < 0.5 ? "#abc" : "#444";
+  const color = res > 0 ? trns(res) : black(-res);
 
-  const ContentComponent = contentComponent
+  const ContentComponent = contentComponent;
 
   const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
-    toggleInstrument()
-  }
+    e.preventDefault();
+    toggleInstrument();
+  };
 
-  return (
-    <EmptySqur color={color} side={side} onContextMenu={handleContextMenu}>
+  const content =
+    variables.x === 0 && variables.y === 3 ? (
+      <div className="hide-mobile">
       <ContentComponent
         side={side}
         expression={expression}
@@ -85,9 +91,14 @@ function Squr({
         error={error}
         instrumentName={instrumentName}
         extra={extra}
-      />
+      /></div>
+    ) : null;
+
+  return (
+    <EmptySqur color={color} side={side} onContextMenu={handleContextMenu}>
+      {content}
     </EmptySqur>
-  )
+  );
 }
 
-export default Squr
+export default Squr;

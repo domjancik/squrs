@@ -11,9 +11,9 @@ const cssSqur = css`
     border-radius: 0.5em;
     padding: 0.5em;
     box-sizing: border-box;
-    box-shadow: inset 0em -.2em .5em #abc;
+    box-shadow: inset 0em -.2em .5em #ff0;
     background: transparent;
-    color: #abc;
+    color: #ff0;
     border: none;
     font-family: 'JetBrains Mono', monospace;
 

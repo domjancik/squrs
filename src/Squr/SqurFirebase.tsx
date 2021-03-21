@@ -48,7 +48,7 @@ function SqurFirebase({
 
   if (localExpression === undefined || status !== "success") {
     return (
-      <EmptySqur side={side} color={{ background: "white" }}>
+      <EmptySqur side={side} color={{ background: "transparent" }}>
         {status}
       </EmptySqur>
     );

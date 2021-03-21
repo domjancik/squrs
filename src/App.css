@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+.overlay {
+  position: absolute;
+  width: 86vmin;
+  height: 86vmin;
+  left: 50vw;
+  margin-left: -43vmin;
+  top: 50vh;
+  margin-top: -43vmin;
+  background: red;
+  /* background: url('https://media.giphy.com/media/U3qYN8S0j3bpK/giphy.gif'); */
+  background: url('nina_tami_overlay_crop_2.jpg');
+  background-size: cover;
+  background-position: center;
+  
+  mix-blend-mode: multiply;
+
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 550px), only screen and (max-height: 550px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
