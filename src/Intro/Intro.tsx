@@ -17,7 +17,14 @@ function Intro({ onClick }: Props): ReactElement {
   return (
     <div css={cssIntro}>
       <h1>
-        MYNAH@
+        <a
+          href="https://youtu.be/PQAP9ttUlro"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          MYNAH
+        </a>
+        @
         <a
           href="https://telavivmakers.org/"
           target="_blank"
