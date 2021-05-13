@@ -1,10 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react'
 
 interface Props {
-    color: { background: string }
+    palette: { background: string }
     children: ReactNode
     side: number | string
-    onContextMenu?: React.MouseEventHandler<HTMLDivElement> | undefined
 }
 
 const sqr = (side: number | string) => ({
@@ -12,15 +11,15 @@ const sqr = (side: number | string) => ({
     height: side
 })
 
-function EmptySqur({color, children, side, onContextMenu}: Props): ReactElement {
+function EmptySqur({palette, children, side, onContextMenu, ...rest}: Props & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>): ReactElement {
     return (
         <div onContextMenu={onContextMenu} style={
             {
                 ...{borderRadius: '0.5em', padding: '0.5em', boxSizing: 'border-box', boxShadow: 'inset 0em -.2em .5em #abc'},
                 ...sqr(side),
-                ...color,
+                ...palette,
             }
-        }>
+        } {...rest}>
             {children}
         </div>
     )

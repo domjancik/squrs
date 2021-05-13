@@ -6,7 +6,9 @@ import firebaseConfig from "./firebaseConfig";
 import Help from "./Help/Help";
 import Intro from "./Intro/Intro";
 import ConfigContextProvider from "./Squr/ConfigContextProvider";
+import Squr from "./Squr/Squr";
 import SqurFirebase from "./Squr/SqurFirebase";
+import SqurLocalStorage from "./Squr/SqurLocalStorage";
 import { TimeContext } from "./Squr/TimeContext";
 import useTime from "./useTime";
 
@@ -25,10 +27,11 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1);
   return a.map((_v, index) => {
     return (
-      <SqurFirebase
+      <SqurLocalStorage
         key={index}
+        storageKey={index.toString()}
         side={SIDE}
-        path={`/squrs/${index}`}
+        // path={`/squrs/${index}`}
         variables={{
           i: index,
           i1: index + 1,

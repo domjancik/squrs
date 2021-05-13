@@ -13,7 +13,7 @@ interface SqurProps {
     variables?: { [key: string]: number }
     contentComponent?: (props: ContentProps) => ReactElement
     useExpressionHook?: ExpressionHookFunction
-    toggleInstrument: () => void
+    toggleInstrument?: () => void
 }
 
 export default SqurProps

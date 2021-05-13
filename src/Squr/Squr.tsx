@@ -26,7 +26,9 @@
 // TODO keyboard func ~ key.a / key('a') / variable for few special keys / gamepad
 // TODO ...
 
-import React, { ReactElement, useState } from "react"
+import { eval as evalExpr, parse } from 'expression-eval'
+
+import React, { ReactElement, useEffect, useState } from "react"
 import EmptySqur from "./EmptySqur"
 import ExpressionContent from "./instruments/Expression/ExpressionContent"
 import SqurProps from "./SqurProps"
@@ -47,6 +49,49 @@ const COLOR_RGB = "170, 187, 204"
 const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` })
 const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` })
 
+// TODO toggle type information
+
+// const handleTouch = <T extends unknown>(set: React.Dispatch<T>, off: T, on: T): {[key: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>]: Function} => ({
+  const handleTouch = <T extends unknown>(current: T, set: React.Dispatch<T>, off: T, on: T) => ({
+  // onTouchStart: () => set(on),
+  onTouchStart: () => current === on ? set(off) : set(on),
+  // onTouchStart: () => console.log(on),
+  // onClick: () => console.log(on),
+  // onTouchEnd: () => set(off),
+  // onTouchEnd: () => console.log(off),
+})
+
+const safeInvoke = <T extends unknown>(f?: () => T) => f ? f() : undefined
+
+type SetExpressionEventDetail = {
+  expression: string
+  condition?: string
+}
+
+const cloneToAll = (element: HTMLElement, expression: string) => {
+  const event = new CustomEvent<SetExpressionEventDetail>('setExpression', {
+    detail: {
+        expression,
+        // condition: 'x == 0',
+        },
+    bubbles: true
+  })
+
+  element.dispatchEvent(event)
+}
+
+const cloneToColumn = (element: HTMLElement, expression: string, column: number) => {
+  const event = new CustomEvent<SetExpressionEventDetail>('setExpression', {
+    detail: {
+        expression,
+        condition: `x === ${column}`,
+        },
+    bubbles: true
+  })
+
+  element.dispatchEvent(event)
+}
+
 function Squr({
   init,
   side = 100,
@@ -61,20 +106,58 @@ function Squr({
   const expression = expressionExternal ?? expressionInternal
   const setExpression = setExpressionExternal ?? setExpressionInternal
 
-  const { res, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
+  // TODO useTouch
 
-  const fontColor = res < 0.5 ? "#abc" : "#444"
-  const color = res > 0 ? trns(res) : black(-res)
+
+
+  const { res: resBase, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
+  const [touching, setTouching] = useState(0)
+
+  const res = resBase
+  const fontColor = res * touching < 0.5 ? "#abc" : "#444"
+  const palette = res * touching > 0 ? trns(res) : black(-res)
+
 
   const ContentComponent = contentComponent
 
+  // const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
+  //   e.preventDefault()
+  //   safeInvoke(toggleInstrument)  
+  // }
+
+  useEffect(() => {
+    const listener = (e: Event) => {
+      // TODO condition evaluation
+      const setExpressionEvent = e as CustomEvent<SetExpressionEventDetail> 
+      
+      const { condition, expression } = setExpressionEvent.detail
+      
+      if (!condition || evalExpr(parse(condition), variables)) {
+        setExpression(expression)
+      }
+    }
+    window.addEventListener('setExpression', listener)
+
+    return () => {
+      window.removeEventListener('setExpression', listener)
+    }
+  }, [setExpression, variables])
+
   const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault()
-    toggleInstrument()
+    // TODO dispatch from current element -> forward ref on EmptySqur
+    cloneToAll(document.body, expression)
+    // cloneToColumn(document.body, expression, variables.x)
   }
 
+
   return (
-    <EmptySqur color={color} side={side} onContextMenu={handleContextMenu}>
+    <EmptySqur
+      palette={palette}
+      side={side}
+      onContextMenu={handleContextMenu}
+      {...handleTouch(touching, setTouching, 0, 1)}
+      >
       <ContentComponent
         side={side}
         expression={expression}

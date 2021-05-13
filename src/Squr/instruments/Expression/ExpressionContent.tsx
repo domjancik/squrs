@@ -61,16 +61,16 @@ function ExpressionContent({
       />
       <div css={cssExtra} style={{ color: fontColor, fontSize: "0.5em" }}>
         <Visualizer value={res} />
-        <div>
+        {/* <div>
           Note: {getNote(variables?.i || 0)}, Vars:{" "}
           {renderVariables(variables || {})}
         </div>
 
         <div style={{ color: fontColor, fontSize: "0.5em" }}>
           Instrument: {instrumentName}
-        </div>
+        </div> */}
       </div>
-      {error && <div style={{ color: "red" }}>{error.description}</div>}
+      {/* {error && <div style={{ color: "red" }}>{error.description}</div>} */}
     </>
   );
 }
