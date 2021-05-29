@@ -33,6 +33,8 @@ import EmptySqur from "./EmptySqur"
 import ExpressionContent from "./instruments/Expression/ExpressionContent"
 import SqurProps from "./SqurProps"
 import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound"
+import setExpression from './events/setExpression'
+import { SetExpressionEventDetail } from './events/SetExpressionEventDetail'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -63,35 +65,13 @@ const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` })
 
 const safeInvoke = <T extends unknown>(f?: () => T) => f ? f() : undefined
 
-type SetExpressionEventDetail = {
-  expression: string
-  condition?: string
-}
-
 const cloneToAll = (element: HTMLElement, expression: string) => {
-  const event = new CustomEvent<SetExpressionEventDetail>('setExpression', {
-    detail: {
-        expression,
-        // condition: 'x == 0',
-        },
-    bubbles: true
-  })
-
-  element.dispatchEvent(event)
+  setExpression(expression, undefined, element)
 }
 
 const cloneToColumn = (element: HTMLElement, expression: string, column: number) => {
-  const event = new CustomEvent<SetExpressionEventDetail>('setExpression', {
-    detail: {
-        expression,
-        condition: `x === ${column}`,
-        },
-    bubbles: true
-  })
-
-  element.dispatchEvent(event)
+  setExpression(expression, `x === ${column}`, element)
 }
-
 function Squr({
   init,
   side = 100,
