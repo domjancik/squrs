@@ -1,3 +1,10 @@
+Next:
+    ☐ Local storage squr should use full data (incl. instrument) - consistent with firebase 
+    ☐ Refactor instrument changing to common (not just in FirebaseSqur)
+    ☐ Flip Squr - settings icon
+    ☐ Instrument selection on flipside (logic, view separate)
+    ☐ Debug animation stutter
+
 Public Release:
     ☐ DB Permission settings
     ☐ Change indication
