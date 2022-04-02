@@ -91,7 +91,7 @@ function Squr({
 
 
   const { res: resBase, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
-  const [touching, setTouching] = useState(0)
+  const [touching, setTouching] = useState(1)
 
   const res = resBase
   const fontColor = res * touching < 0.5 ? "#abc" : "#444"
@@ -100,10 +100,10 @@ function Squr({
 
   const ContentComponent = contentComponent
 
-  // const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-  //   e.preventDefault()
-  //   safeInvoke(toggleInstrument)  
-  // }
+  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    safeInvoke(toggleInstrument)  
+  }
 
   useEffect(() => {
     const listener = (e: Event) => {
@@ -123,12 +123,12 @@ function Squr({
     }
   }, [setExpression, variables])
 
-  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
+  // const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    // e.preventDefault()
     // TODO dispatch from current element -> forward ref on EmptySqur
-    cloneToAll(document.body, expression)
+    // cloneToAll(document.body, expression)
     // cloneToColumn(document.body, expression, variables.x)
-  }
+  // }
 
 
   return (
