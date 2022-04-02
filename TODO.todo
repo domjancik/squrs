@@ -1,10 +1,16 @@
 Next:
+    ☐ Auto-format
     ☐ Local storage squr should use full data (incl. instrument) - consistent with firebase 
     ☐ Refactor instrument changing to common (not just in FirebaseSqur)
     ☐ Scale Selection 
     ☐ Flip Squr - settings icon
     ☐ Instrument selection on flipside (logic, view separate)
     ☐ Debug animation stutter (only in recent Chrome)
+
+Module federation:
+    ☐ Update create react app to latest use Webpack 5
+    ☐ Extract shared interfaces 
+    ☐ Create test federated Squr 
 
 Public Release:
     ☐ DB Permission settings
