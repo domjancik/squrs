@@ -1,19 +1,19 @@
-import { useState } from "react"
-import { ContentElement } from "../types"
-import InstrumentSelection from "./InstrumentSelection"
+import { useState } from "react";
+import { ContentElement } from "../types";
+import MenuContent from "./menu/MenuContent";
 
 function useFlipside(baseContent: ContentElement) {
-    const [isFlipped, setIsFlipped] = useState(false)
-    const handleFlip = () => {
-        setIsFlipped((flipped) => !flipped)
-    }
+  const [isFlipped, setIsFlipped] = useState(false);
+  const handleFlip = () => {
+    setIsFlipped((flipped) => !flipped);
+  };
 
-    const ContentComponent = isFlipped ? InstrumentSelection : baseContent
+  const ContentComponent = isFlipped ? MenuContent : baseContent;
 
-    return {
-        handleFlip,
-        ContentComponent
-    }
+  return {
+    handleFlip,
+    ContentComponent,
+  };
 }
 
-export default useFlipside
+export default useFlipside;

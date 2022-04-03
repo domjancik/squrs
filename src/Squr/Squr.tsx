@@ -12,34 +12,26 @@
 
 // TODO multiple preset animations
 // TODO beat sync
-// TODO rounded corners
-// TODO expression evaluation
 // TODO saving expression as preset
 // TODO persisting presets
 // TODO live sync of presets / selection (fbase realtime db?)
 // TODO support 2x not just 2*x
 // TODO input bg on focus
 // TODO shared globals (exposed to users)
-// TODO graph display
 // TODO deterministic noise functions
 // TODO splittable squrs
 // TODO keyboard func ~ key.a / key('a') / variable for few special keys / gamepad
-// TODO ...
 
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { eval as evalExpr, parse } from "expression-eval";
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import EmptySqur from "./EmptySqur";
-import ExpressionContent from "./instruments/Expression/ExpressionContent";
 import SqurProps from "./SqurProps";
-import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound";
-import setExpression from "./events/setExpression";
-import { SetExpressionEventDetail } from "./events/SetExpressionEventDetail";
 import { INSTRUMENTS } from "./instruments";
 import useFlipside from "./flipside/useFlipside";
 import Button from "../Button/Button";
+import useSetExpressionEventListener from './useSetExpressionEventListener';
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -73,19 +65,6 @@ const handleTouch = <T extends unknown>(
   // onTouchEnd: () => console.log(off),
 });
 
-const safeInvoke = <T extends unknown>(f?: () => T) => (f ? f() : undefined);
-
-const cloneToAll = (element: HTMLElement, expression: string) => {
-  setExpression(expression, undefined, element);
-};
-
-const cloneToColumn = (
-  element: HTMLElement,
-  expression: string,
-  column: number
-) => {
-  setExpression(expression, `x === ${column}`, element);
-};
 
 function useExternalIfDefined<T>(
   init: T,
@@ -156,30 +135,8 @@ function Squr({
   const fontColor = res * touching < 0.5 ? "#abc" : "#444";
   const palette = res * touching > 0 ? trns(res) : black(-res);
 
-  useEffect(() => {
-    const listener = (e: Event) => {
-      // TODO condition evaluation
-      const setExpressionEvent = e as CustomEvent<SetExpressionEventDetail>;
+  useSetExpressionEventListener(setExpression, variables)
 
-      const { condition, expression } = setExpressionEvent.detail;
-
-      if (!condition || evalExpr(parse(condition), variables)) {
-        setExpression(expression);
-      }
-    };
-    window.addEventListener("setExpression", listener);
-
-    return () => {
-      window.removeEventListener("setExpression", listener);
-    };
-  }, [setExpression, variables]);
-
-  // const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-  // e.preventDefault()
-  // TODO dispatch from current element -> forward ref on EmptySqur
-  // cloneToAll(document.body, expression)
-  // cloneToColumn(document.body, expression, variables.x)
-  // }
 
   return (
     <EmptySqur

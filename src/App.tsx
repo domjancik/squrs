@@ -6,7 +6,6 @@ import firebaseConfig from "./firebaseConfig";
 import Help from "./Help/Help";
 import Intro from "./Intro/Intro";
 import ConfigContextProvider from "./Squr/ConfigContextProvider";
-import Squr from "./Squr/Squr";
 import SqurFirebase from "./Squr/SqurFirebase";
 import SqurLocalStorage from "./Squr/SqurLocalStorage";
 import { TimeContext } from "./Squr/TimeContext";
@@ -21,7 +20,7 @@ const SIDE = `${80 / SQURS_PER_ROW}vmin`;
 
 const getXIndex = (index: number, perRow = SQURS_PER_ROW) => index % perRow;
 const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
-  Math.round(index / perRow);
+  Math.floor(index / perRow);
 
 const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1);
@@ -56,7 +55,6 @@ function App() {
       <ConfigContextProvider>
         <TimeContext.Provider value={time}>
           {/* TODO Redo with minimal grid based centering */}
-          {/* TODO gif animation credit */}
           <div
             style={{
               display: "flex",
