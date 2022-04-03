@@ -32,6 +32,8 @@ import { INSTRUMENTS } from "./instruments";
 import useFlipside from "./flipside/useFlipside";
 import Button from "../Button/Button";
 import useSetExpressionEventListener from './useSetExpressionEventListener';
+import useExpressionWithSound from './instruments/Expression/useExpressionWithSound';
+import ExpressionContent from './instruments/Expression/ExpressionContent';
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
@@ -115,8 +117,8 @@ function Squr({
     setViewExternal
   );
 
-  const { logic: useLogic } = INSTRUMENTS[logic];
-  const { view: View } = INSTRUMENTS[view];
+  const { logic: useLogic } = INSTRUMENTS[logic] || {logic: useExpressionWithSound};
+  const { view: View } = INSTRUMENTS[view] || {view: ExpressionContent};
 
   const BaseComponent = contentComponent ?? View;
   const {ContentComponent, handleFlip} = useFlipside(BaseComponent)
