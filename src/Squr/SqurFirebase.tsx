@@ -60,8 +60,8 @@ function SqurFirebase({
       const logic = data.logic ?? DEFAULT_LOGIC;
       const view = data.view ?? DEFAULT_VIEW;
       if (expr !== localExpression) setLocalExpression(expr);
-      if (logic !== localLogic) setLocalLogic(expr);
-      if (view !== localView) setLocalView(expr);
+      if (logic !== localLogic) setLocalLogic(logic);
+      if (view !== localView) setLocalView(view);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data]);
