@@ -26,11 +26,11 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1);
   return a.map((_v, index) => {
     return (
-      <SqurLocalStorage
+      <SqurFirebase
         key={index}
-        storageKey={index.toString()}
+        // storageKey={index.toString()}
         side={SIDE}
-        // path={`/squrs/${index}`}
+        path={`/squrs/${index}`}
         variables={{
           i: index,
           i1: index + 1,
