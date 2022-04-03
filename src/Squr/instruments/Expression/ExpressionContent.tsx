@@ -32,9 +32,6 @@ function ExpressionContent({
   setExpression,
   res,
   fontColor,
-  variables,
-  error,
-  instrumentName,
 }: ContentProps): ReactElement {
   return (
     <>

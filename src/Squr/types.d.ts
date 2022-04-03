@@ -9,4 +9,6 @@ type ExpressionHookFunction = (
   extra?: { [key: string]: any };
 };
 
-export { ExpressionHookFunction };
+type ContentElement = (props: ContentProps) => ReactElement
+
+export { ExpressionHookFunction, ContentElement };

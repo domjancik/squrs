@@ -1,19 +1,20 @@
-import { ReactElement } from "react";
-import ContentProps from "./ContentProps";
-import { ExpressionHookFunction } from "./types";
+import { ContentElement, ExpressionHookFunction } from "./types";
 
 interface SqurProps {
-    expression?: string
-    setExpression?: (val: string) => void //React.Dispatch<React.SetStateAction<string>>
-    side?: number | string
-    /**
-     * Initial expression
-     */
-    init?: string
-    variables?: { [key: string]: number }
-    contentComponent?: (props: ContentProps) => ReactElement
-    useExpressionHook?: ExpressionHookFunction
-    toggleInstrument?: () => void
+  expression?: string;
+  setExpression?: (val: string) => void;
+  logic?: string;
+  setLogic?: (val: string) => void;
+  view?: string;
+  setView?: (val: string) => void;
+  side?: number | string;
+  /**
+   * Initial expression
+   */
+  init?: string;
+  variables?: { [key: string]: number };
+  contentComponent?: ContentElement;
+  useExpressionHook?: ExpressionHookFunction;
 }
 
-export default SqurProps
+export default SqurProps;

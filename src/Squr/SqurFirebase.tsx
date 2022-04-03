@@ -5,17 +5,24 @@ import "firebase/database";
 import { useDatabase, useDatabaseObjectData } from "reactfire";
 import SqurProps from "./SqurProps";
 import EmptySqur from "./EmptySqur";
-import { INSTRUMENTS } from "./instruments";
+import {
+  DEFAULT_EXPRESSION,
+  DEFAULT_LOGIC,
+  DEFAULT_VIEW,
+} from "./squrCommon";
+import { getSqurKey } from "./squrCommon";
 
 interface SqurFirebaseProps
   extends Omit<
     SqurProps,
-    "expression" | "setExpression" | "contentComponent" | "useExpressionHook" | "toggleInstrument"
+    | "expression"
+    | "setExpression"
+    | "contentComponent"
+    | "useExpressionHook"
+    | "toggleInstrument"
   > {
   path?: string;
 }
-
-const DEFAULT_EXPRESSION = "0";
 
 function SqurFirebase({
   side = 100,
@@ -26,51 +33,57 @@ function SqurFirebase({
 
   const { data, status } = useDatabaseObjectData<{
     expr: string;
-    instrument?: string;
+    logic?: string;
+    view?: string;
   }>(ref);
-
-  // TODO debounce
-  const setExpression = (newExpression: string) => {
-    setLocalExpression(newExpression);
-    ref.update({ expr: newExpression });
-  };
 
   // Optimistic updates and fix for cursor jumping (https://github.com/facebook/react/issues/955)
   const [localExpression, setLocalExpression] = useState<string | undefined>(
     undefined
   );
+  const [localLogic, setLocalLogic] = useState<string | undefined>(undefined);
+  const [localView, setLocalView] = useState<string | undefined>(undefined);
+  // TODO debounce
+  const makeSetStateAndFirebase =
+    (setLocal: typeof setLocalExpression, firebaseField: string) =>
+    (newValue: string) => {
+      setLocal(newValue);
+      ref.update({ [firebaseField]: newValue });
+    };
+  const setExpression = makeSetStateAndFirebase(setLocalExpression, "expr");
+  const setLogic = makeSetStateAndFirebase(setLocalLogic, "logic");
+  const setView = makeSetStateAndFirebase(setLocalView, "view");
+
   useEffect(() => {
     if (status === "success") {
       const expr = data.expr ?? DEFAULT_EXPRESSION;
+      const logic = data.logic ?? DEFAULT_LOGIC;
+      const view = data.view ?? DEFAULT_VIEW;
       if (expr !== localExpression) setLocalExpression(expr);
+      if (logic !== localLogic) setLocalLogic(expr);
+      if (view !== localView) setLocalView(expr);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data]);
 
   if (localExpression === undefined || status !== "success") {
     return (
-      <EmptySqur side={side} palette={{ background: "white" }}>
+      <EmptySqur side={side} palette={{ background: "black" }}>
         {status}
       </EmptySqur>
     );
   }
 
-  const instrumentName = data.instrument ?? "expsyn";
-  const { logic, view } = INSTRUMENTS[instrumentName] || INSTRUMENTS["expsyn"];
-  const toggleInstrument = () => {
-    const instrument = instrumentName === "expsyn" ? "gridseq" : "expsyn";
-
-    ref.update({ instrument });
-  };
-
   return (
     <Squr
-      key={instrumentName}
-      toggleInstrument={toggleInstrument}
+      key={getSqurKey(localLogic, localView)}
       side={side}
       expression={localExpression}
       setExpression={setExpression}
-      contentComponent={view}
-      useExpressionHook={logic}
+      logic={localLogic}
+      setLogic={setLogic}
+      view={localView}
+      setView={setView} 
       {...rest}
     />
   );

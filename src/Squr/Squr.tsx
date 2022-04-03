@@ -26,20 +26,25 @@
 // TODO keyboard func ~ key.a / key('a') / variable for few special keys / gamepad
 // TODO ...
 
-import { eval as evalExpr, parse } from 'expression-eval'
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react'
+import { eval as evalExpr, parse } from "expression-eval";
 
-import React, { ReactElement, useEffect, useState } from "react"
-import EmptySqur from "./EmptySqur"
-import ExpressionContent from "./instruments/Expression/ExpressionContent"
-import SqurProps from "./SqurProps"
-import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound"
-import setExpression from './events/setExpression'
-import { SetExpressionEventDetail } from './events/SetExpressionEventDetail'
+import React, { ReactElement, useEffect, useState } from "react";
+import EmptySqur from "./EmptySqur";
+import ExpressionContent from "./instruments/Expression/ExpressionContent";
+import SqurProps from "./SqurProps";
+import useExpressionWithSound from "./instruments/Expression/useExpressionWithSound";
+import setExpression from "./events/setExpression";
+import { SetExpressionEventDetail } from "./events/SetExpressionEventDetail";
+import { INSTRUMENTS } from "./instruments";
+import useFlipside from "./flipside/useFlipside";
+import Button from "../Button/Button";
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
 // const COLOR_RGB = '255, 0, 255'
-const COLOR_RGB = "170, 187, 204"
+const COLOR_RGB = "170, 187, 204";
 
 // const com = (a: any[]) => a.map(e => e.toString()).join(',')
 
@@ -48,96 +53,140 @@ const COLOR_RGB = "170, 187, 204"
 //     return {background: `rgb(${com([v, v, v])})`}
 // }
 
-const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` })
-const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` })
+const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` });
+const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` });
 
 // TODO toggle type information
 
 // const handleTouch = <T extends unknown>(set: React.Dispatch<T>, off: T, on: T): {[key: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>]: Function} => ({
-  const handleTouch = <T extends unknown>(current: T, set: React.Dispatch<T>, off: T, on: T) => ({
+const handleTouch = <T extends unknown>(
+  current: T,
+  set: React.Dispatch<T>,
+  off: T,
+  on: T
+) => ({
   // onTouchStart: () => set(on),
-  onTouchStart: () => current === on ? set(off) : set(on),
+  onTouchStart: () => (current === on ? set(off) : set(on)),
   // onTouchStart: () => console.log(on),
   // onClick: () => console.log(on),
   // onTouchEnd: () => set(off),
   // onTouchEnd: () => console.log(off),
-})
+});
 
-const safeInvoke = <T extends unknown>(f?: () => T) => f ? f() : undefined
+const safeInvoke = <T extends unknown>(f?: () => T) => (f ? f() : undefined);
 
 const cloneToAll = (element: HTMLElement, expression: string) => {
-  setExpression(expression, undefined, element)
+  setExpression(expression, undefined, element);
+};
+
+const cloneToColumn = (
+  element: HTMLElement,
+  expression: string,
+  column: number
+) => {
+  setExpression(expression, `x === ${column}`, element);
+};
+
+function useExternalIfDefined<T>(
+  init: T,
+  external?: T,
+  setExternal?: (value: T) => void
+): [T, (value: T) => void] {
+  const [internal, setInternal] = useState(init);
+  const value = external ?? internal;
+  const setValue = setExternal ?? setInternal;
+
+  return [value, setValue];
 }
 
-const cloneToColumn = (element: HTMLElement, expression: string, column: number) => {
-  setExpression(expression, `x === ${column}`, element)
-}
+const cssFlipButton = css`
+  width: calc(100% - 1.3em);
+  position: absolute;
+  bottom: 0.9em;
+  left: 0.6em;
+  font-size: 0.25em;
+`
+
 function Squr({
   init,
   side = 100,
   expression: expressionExternal,
   setExpression: setExpressionExternal,
   variables = {},
-  toggleInstrument,
-  contentComponent = ExpressionContent,
-  useExpressionHook = useExpressionWithSound,
+  contentComponent,
+  useExpressionHook: useExpressionHookExternal,
+  logic: logicExternal,
+  setLogic: setLogicExternal,
+  view: viewExternal,
+  setView: setViewExternal,
 }: SqurProps): ReactElement {
-  const [expressionInternal, setExpressionInternal] = useState(init || "0")
-  const expression = expressionExternal ?? expressionInternal
-  const setExpression = setExpressionExternal ?? setExpressionInternal
+  const [expression, setExpression] = useExternalIfDefined(
+    "0",
+    expressionExternal,
+    setExpressionExternal
+  );
+  const [logic, setLogic] = useExternalIfDefined(
+    "expsyn",
+    logicExternal,
+    setLogicExternal
+  );
+  const [view, setView] = useExternalIfDefined(
+    "expsyn",
+    viewExternal,
+    setViewExternal
+  );
+
+  const { logic: useLogic } = INSTRUMENTS[logic];
+  const { view: View } = INSTRUMENTS[view];
+
+  const BaseComponent = contentComponent ?? View;
+  const {ContentComponent, handleFlip} = useFlipside(BaseComponent)
 
   // TODO useTouch
+  const useExpressionHook = useExpressionHookExternal ?? useLogic;
 
+  const {
+    res: resBase,
+    error,
+    extra,
+  } = useExpressionHook(expression, setExpression, variables);
+  const [touching, setTouching] = useState(1);
 
-
-  const { res: resBase, error, instrumentName, extra } = useExpressionHook(expression, setExpression, variables)
-  const [touching, setTouching] = useState(1)
-
-  const res = resBase
-  const fontColor = res * touching < 0.5 ? "#abc" : "#444"
-  const palette = res * touching > 0 ? trns(res) : black(-res)
-
-
-  const ContentComponent = contentComponent
-
-  const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
-    safeInvoke(toggleInstrument)  
-  }
+  const res = resBase;
+  const fontColor = res * touching < 0.5 ? "#abc" : "#444";
+  const palette = res * touching > 0 ? trns(res) : black(-res);
 
   useEffect(() => {
     const listener = (e: Event) => {
       // TODO condition evaluation
-      const setExpressionEvent = e as CustomEvent<SetExpressionEventDetail> 
-      
-      const { condition, expression } = setExpressionEvent.detail
-      
+      const setExpressionEvent = e as CustomEvent<SetExpressionEventDetail>;
+
+      const { condition, expression } = setExpressionEvent.detail;
+
       if (!condition || evalExpr(parse(condition), variables)) {
-        setExpression(expression)
+        setExpression(expression);
       }
-    }
-    window.addEventListener('setExpression', listener)
+    };
+    window.addEventListener("setExpression", listener);
 
     return () => {
-      window.removeEventListener('setExpression', listener)
-    }
-  }, [setExpression, variables])
+      window.removeEventListener("setExpression", listener);
+    };
+  }, [setExpression, variables]);
 
   // const handleContextMenu: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    // e.preventDefault()
-    // TODO dispatch from current element -> forward ref on EmptySqur
-    // cloneToAll(document.body, expression)
-    // cloneToColumn(document.body, expression, variables.x)
+  // e.preventDefault()
+  // TODO dispatch from current element -> forward ref on EmptySqur
+  // cloneToAll(document.body, expression)
+  // cloneToColumn(document.body, expression, variables.x)
   // }
-
 
   return (
     <EmptySqur
       palette={palette}
       side={side}
-      onContextMenu={handleContextMenu}
       {...handleTouch(touching, setTouching, 0, 1)}
-      >
+    >
       <ContentComponent
         side={side}
         expression={expression}
@@ -146,11 +195,15 @@ function Squr({
         fontColor={fontColor}
         variables={variables}
         error={error}
-        instrumentName={instrumentName}
+        logic={logic}
+        setLogic={setLogic}
+        view={view}
+        setView={setView}
         extra={extra}
       />
+      <Button css={cssFlipButton} onClick={handleFlip}>flip</Button>
     </EmptySqur>
-  )
+  );
 }
 
-export default Squr
+export default Squr;
