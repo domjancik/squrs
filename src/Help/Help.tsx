@@ -3,13 +3,14 @@ import { css } from '@emotion/react'
 
 import React, { ReactElement, useState } from 'react'
 import Button from '../Button/Button'
-
-interface Props {}
+import ReactMarkdown from 'react-markdown'
+import { helpTextMarkdown } from './helpContent'
 
 const cssHelp = css`
   position: fixed;
   left: 2em;
   top: 2em;
+  pointer-events: none;
 `
 
 const cssHelpContent = css`
@@ -17,7 +18,10 @@ const cssHelpContent = css`
   color: #abc;
   border-radius: 0.5em;
   padding: 1em;
-  pointer-events: none;
+`
+
+const cssHelpNavigation = css`
+  pointer-events: all;
 `
 
 type HelpItem = {
@@ -72,25 +76,61 @@ const renderHelpItems = (items: HelpItem[]) => {
   return <ul>{itemElements}</ul>
 }
 
-function Help({}: Props): ReactElement {
-  const [open, setOpen] = useState(false)
-
-  const helpContent = (
-    <div css={cssHelpContent}>
-      <p>make the squrs sing and shine with math expressions and clicks</p>
-      <p>all is syncd, tell friends</p>
-      <p>RIGHT CLICK switches instruments</p>
+const PAGES = {
+  intro: () => <ReactMarkdown>{helpTextMarkdown}</ReactMarkdown>,
+  variables: () => (
+    <>
       <h3>Variables</h3>
       {renderHelpItems(variables)}
+    </>
+  ),
+  functions: () => (
+    <>
       <h3>Functions</h3>
       {renderHelpItems(functions)}
-    </div>
+    </>
+  ),
+} as const
+
+type Page = keyof typeof PAGES
+
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>
+
+function ClosedHelpButtons({ setOpen }: { setOpen: SetState<boolean> }) {
+  return <Button onClick={() => setOpen(true)}>What am I to do?</Button>
+}
+
+function OpenedHelpButtons({
+  setOpen,
+  setPage,
+}: {
+  setOpen: SetState<boolean>
+  setPage: SetState<Page>
+}) {
+  return (
+    <>
+      <Button onClick={() => setPage('intro')}>Intro</Button>
+      <Button onClick={() => setPage('functions')}>Functions</Button>
+      <Button onClick={() => setPage('variables')}>Variables</Button>
+      <Button onClick={() => setOpen(false)}>Got it!</Button>
+    </>
   )
+}
+
+function Help(): ReactElement {
+  const [open, setOpen] = useState(false)
+  const [page, setPage] = useState<Page>('intro')
+
+  const helpContent = <div css={cssHelpContent}>{PAGES[page]()}</div>
 
   return (
     <div css={cssHelp}>
-      <div>
-        <Button onClick={() => setOpen((o) => !o)}>Help pls</Button>
+      <div css={cssHelpNavigation}>
+        {open ? (
+          <OpenedHelpButtons setOpen={setOpen} setPage={setPage} />
+        ) : (
+          <ClosedHelpButtons setOpen={setOpen} />
+        )}
       </div>
       {open && helpContent}
     </div>
