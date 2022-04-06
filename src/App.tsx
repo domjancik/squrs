@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { FirebaseAppProvider } from 'reactfire'
 import * as Tone from 'tone'
 import './App.css'
@@ -6,49 +6,19 @@ import firebaseConfig from './firebaseConfig'
 import Help from './Help/Help'
 import Intro from './Intro/Intro'
 import ConfigContextProvider from './Squr/ConfigContextProvider'
-import PersistentSqur from './Squr/PersistentSqur'
-import useFirebasePersistence from './Squr/store/useFirebasePersistence'
+import makeSqurs from './Squr/makeSqurs'
 import { TimeContext } from './Squr/TimeContext'
+import useQueryParamsConfig from './Squr/useQueryParamsConfig'
 import useTime from './useTime'
-
-// TODO make this also syncd
-const SQURS_PER_ROW = 4
-const SQURS_PER_COL = SQURS_PER_ROW
-
-const SQURS = SQURS_PER_ROW * SQURS_PER_COL
-const SIDE = `${80 / SQURS_PER_ROW}vmin`
-
-const getXIndex = (index: number, perRow = SQURS_PER_ROW) => index % perRow
-const getYIndex = (index: number, perRow = SQURS_PER_ROW) =>
-  Math.floor(index / perRow)
-
-const makeSqurs = (count: number) => {
-  const a = new Array(count).fill(1)
-  return a.map((_v, index) => {
-    return (
-      <PersistentSqur
-        usePersistenceHook={useFirebasePersistence}
-        key={index}
-        side={SIDE}
-        storageKey={`/squrs/${index}`}
-        variables={{
-          i: index,
-          i1: index + 1,
-          x: getXIndex(index),
-          x1: getXIndex(index) + 1,
-          y: getYIndex(index),
-          y1: getYIndex(index) + 1,
-        }}
-      />
-    )
-  })
-}
-
-const dynamicFirebaseSqurs = makeSqurs(SQURS)
 
 function App() {
   const time = useTime()
   const [started, setStarted] = useState(false)
+  const config = useQueryParamsConfig()
+  const { squrs, sideSize } = useMemo(() => {
+    const { resolution, room, store } = config
+    return makeSqurs(resolution, room, store)
+  }, [config])
 
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
@@ -68,11 +38,11 @@ function App() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: `repeat(${SQURS_PER_ROW}, ${SIDE})`,
+                  gridTemplateColumns: `repeat(${config.resolution}, ${sideSize})`,
                   gap: '2vmin',
                 }}
               >
-                {dynamicFirebaseSqurs}
+                {squrs}
                 <Help />
               </div>
             ) : (
