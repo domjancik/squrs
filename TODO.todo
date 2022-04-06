@@ -1,5 +1,6 @@
 Next:
     ☐ Siggen squr
+    ☐ Full squr duplication 
     ✔ Auto-format @done(22-04-06 09:51)
     ✔ Local storage squr should use full data (incl. instrument) - consistent with firebase @done(22-04-04 01:45)
     ✔ Refactor instrument changing to common (not just in FirebaseSqur) @done(22-04-04 01:45)
