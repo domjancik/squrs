@@ -14,7 +14,7 @@ interface SqurLocalStorageProps
 
 function SqurLocalStorage({
   storageKey,
-  ...props
+  ...rest
 }: SqurLocalStorageProps): ReactElement {
   const [expression, setExpression] = useLocalStorageState(
     `${storageKey}-expression`,
@@ -36,7 +36,7 @@ function SqurLocalStorage({
       setLogic={setLogic}
       view={view}
       setView={setView}
-      {...props}
+      {...rest}
     />
   )
 }

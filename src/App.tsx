@@ -28,9 +28,8 @@ const makeSqurs = (count: number) => {
     return (
       <SqurFirebase
         key={index}
-        // storageKey={index.toString()}
         side={SIDE}
-        path={`/squrs/${index}`}
+        storageKey={`/squrs/${index}`}
         variables={{
           i: index,
           i1: index + 1,

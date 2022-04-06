@@ -17,15 +17,15 @@ interface SqurFirebaseProps
     | 'useExpressionHook'
     | 'toggleInstrument'
   > {
-  path?: string
+  storageKey?: string
 }
 
 function SqurFirebase({
   side = 100,
-  path = '/squr',
+  storageKey = '/squr',
   ...rest
 }: SqurFirebaseProps): ReactElement {
-  const ref = useDatabase().ref(path)
+  const ref = useDatabase().ref(storageKey)
 
   const { data, status } = useDatabaseObjectData<{
     expr: string
