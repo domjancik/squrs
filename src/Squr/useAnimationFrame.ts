@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const useAnimationFrame = (callback: (time: number) => void) => {
   // Use useRef for mutable variables that we want to persist
