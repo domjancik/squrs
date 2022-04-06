@@ -1,15 +1,16 @@
 Next:
     ☐ Siggen squr
-    ☐ Auto-format
+    ✔ Auto-format @done(22-04-06 09:51)
     ✔ Local storage squr should use full data (incl. instrument) - consistent with firebase @done(22-04-04 01:45)
     ✔ Refactor instrument changing to common (not just in FirebaseSqur) @done(22-04-04 01:45)
-    ☐ Scale Selection 
+    ✔ Scale Selection @done(22-04-06 09:51) -> via console squrSetScale(scaleIndex: number)
     ✔ Flip Squr - settings icon @done(22-04-04 01:45) no icon
     ✔ Instrument selection on flipside (logic, view separate) @done(22-04-04 01:46) logic/view together. can re-use parts in instruments
     ✔ Debug animation stutter (only in recent Chrome) @done(22-04-04 01:46) was caused by DarkReader extension
 
 Module federation:
     ☐ Update create react app to latest use Webpack 5
+    ☐ Implement https://www.h3manth.com/posts/dynamic-remotes-webpack-module-federation/
     ☐ Extract shared interfaces 
     ☐ Create test federated Squr 
 
