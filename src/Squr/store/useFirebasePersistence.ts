@@ -1,30 +1,11 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import Squr from './Squr'
+import { useEffect, useState } from 'react'
 
 import 'firebase/database'
 import { useDatabase, useDatabaseObjectData } from 'reactfire'
-import SqurProps from './SqurProps'
-import EmptySqur from './EmptySqur'
-import { DEFAULT_EXPRESSION, DEFAULT_LOGIC, DEFAULT_VIEW } from './squrCommon'
-import { getSqurKey } from './squrCommon'
+import { DEFAULT_EXPRESSION, DEFAULT_LOGIC, DEFAULT_VIEW } from '../squrCommon'
+import { UsePersistenceHook } from './squrStore'
 
-interface SqurFirebaseProps
-  extends Omit<
-    SqurProps,
-    | 'expression'
-    | 'setExpression'
-    | 'contentComponent'
-    | 'useExpressionHook'
-    | 'toggleInstrument'
-  > {
-  storageKey?: string
-}
-
-function SqurFirebase({
-  side = 100,
-  storageKey = '/squr',
-  ...rest
-}: SqurFirebaseProps): ReactElement {
+const useFirebasePersistence: UsePersistenceHook = (storageKey: string) => {
   const ref = useDatabase().ref(storageKey)
 
   const { data, status } = useDatabaseObjectData<{
@@ -62,27 +43,14 @@ function SqurFirebase({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data])
 
-  if (localExpression === undefined || status !== 'success') {
-    return (
-      <EmptySqur side={side} palette={{ background: 'black' }}>
-        {status}
-      </EmptySqur>
-    )
+  return {
+    expression: localExpression,
+    setExpression,
+    logic: localLogic,
+    setLogic,
+    view: localView,
+    setView,
   }
-
-  return (
-    <Squr
-      key={getSqurKey(localLogic, localView)}
-      side={side}
-      expression={localExpression}
-      setExpression={setExpression}
-      logic={localLogic}
-      setLogic={setLogic}
-      view={localView}
-      setView={setView}
-      {...rest}
-    />
-  )
 }
 
-export default SqurFirebase
+export default useFirebasePersistence

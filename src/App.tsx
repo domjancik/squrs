@@ -6,8 +6,8 @@ import firebaseConfig from './firebaseConfig'
 import Help from './Help/Help'
 import Intro from './Intro/Intro'
 import ConfigContextProvider from './Squr/ConfigContextProvider'
-import SqurFirebase from './Squr/SqurFirebase'
-import SqurLocalStorage from './Squr/SqurLocalStorage'
+import PersistentSqur from './Squr/PersistentSqur'
+import useFirebasePersistence from './Squr/store/useFirebasePersistence'
 import { TimeContext } from './Squr/TimeContext'
 import useTime from './useTime'
 
@@ -26,7 +26,8 @@ const makeSqurs = (count: number) => {
   const a = new Array(count).fill(1)
   return a.map((_v, index) => {
     return (
-      <SqurFirebase
+      <PersistentSqur
+        usePersistenceHook={useFirebasePersistence}
         key={index}
         side={SIDE}
         storageKey={`/squrs/${index}`}
@@ -71,8 +72,8 @@ function App() {
                   gap: '2vmin',
                 }}
               >
-                <Help />
                 {dynamicFirebaseSqurs}
+                <Help />
               </div>
             ) : (
               <Intro
