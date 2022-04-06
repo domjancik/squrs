@@ -20,6 +20,7 @@
     "react-dom": "^17.0.1",
     "react-firebase-hooks": "^2.2.0",
     "react-json-view": "^1.21.1",
+    "react-markdown": "^8.0.2",
     "react-scripts": "4.0.2",
     "reactfire": "^3.0.0-rc.0",
     "tone": "^14.7.77",
