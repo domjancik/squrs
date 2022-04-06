@@ -3,10 +3,21 @@ import { css } from '@emotion/react'
 
 import React, { ReactElement } from 'react'
 import Button from '../Button/Button'
+import ReactMarkdown from 'react-markdown'
+
+const buttonNoticeMarkdown = `Hello Visitor.
+
+For your safety no sounds will play until you press the button above.
+
+Godspeed, *domj*`
 
 const cssIntro = css`
   color: white;
   text-align: center;
+`
+
+const cssMargin = css`
+  margin-top: 1em;
 `
 
 interface Props {
@@ -20,8 +31,10 @@ function Intro({ onClick }: Props): ReactElement {
       <div>
         <Button onClick={onClick}>□□ start □□</Button>
       </div>
-      <div>
-        <small>gotta make you click to make sounds, aight, domj</small>
+      <div css={cssMargin}>
+        <small>
+          <ReactMarkdown>{buttonNoticeMarkdown}</ReactMarkdown>
+        </small>
       </div>
     </div>
   )

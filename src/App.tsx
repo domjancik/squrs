@@ -3,6 +3,7 @@ import { FirebaseAppProvider } from 'reactfire'
 import * as Tone from 'tone'
 import './App.css'
 import firebaseConfig from './firebaseConfig'
+import Credit from './Help/Credit'
 import Help from './Help/Help'
 import Intro from './Intro/Intro'
 import ConfigContextProvider from './Squr/ConfigContextProvider'
@@ -44,6 +45,7 @@ function App() {
               >
                 {squrs}
                 <Help />
+                <Credit />
               </div>
             ) : (
               <Intro
