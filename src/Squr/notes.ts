@@ -2,6 +2,7 @@ import * as Tone from 'tone'
 
 interface ScaleWindow extends Window {
   sqursSetScale: (index: number) => void
+  sqursListScales: () => void
 }
 
 declare let window: ScaleWindow
@@ -63,6 +64,12 @@ window.sqursSetScale = (index: number) => {
   const scale = SCALES[index % SCALES.length]
   console.log(`Changing to scale ${scale.title}`)
   notes = scale.notes
+}
+
+window.sqursListScales = () => {
+  SCALES.forEach(({ title, notes }, index) =>
+    console.log(`${index}: ${title} - ${notes}`)
+  )
 }
 
 const getNote = (i: number) => {
