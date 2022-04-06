@@ -1,6 +1,6 @@
 type SetExpressionEventDetail = {
-    expression: string;
-    condition?: string;
-  };
+  expression: string
+  condition?: string
+}
 
-  export type { SetExpressionEventDetail }
+export type { SetExpressionEventDetail }

@@ -32,7 +32,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "format": "prettier-eslint --write \"{,!(node_modules)/**/}*.{ts,tsx,js,jsx}\""
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +52,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
+    "prettier-eslint-cli": "^5.0.1"
   }
 }

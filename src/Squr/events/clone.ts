@@ -1,6 +1,6 @@
-import setExpression from "./setExpression";
+import setExpression from './setExpression'
 
-const safeInvoke = <T extends unknown>(f?: () => T) => (f ? f() : undefined);
+const safeInvoke = <T extends unknown>(f?: () => T) => (f ? f() : undefined)
 
 /**
  * Emit an event that clones given expression to all Squrs
@@ -9,8 +9,8 @@ const safeInvoke = <T extends unknown>(f?: () => T) => (f ? f() : undefined);
  * @param element Element to emit event on, will default to document
  */
 const cloneToAll = (expression: string, element?: HTMLElement) => {
-  setExpression(expression, undefined, element);
-};
+  setExpression(expression, undefined, element)
+}
 
 /**
  * Emit an event that clones given expression to specific column of squrs
@@ -24,8 +24,8 @@ const cloneToColumn = (
   column: number,
   element?: HTMLElement
 ) => {
-  setExpression(expression, `x === ${column}`, element);
-};
+  setExpression(expression, `x === ${column}`, element)
+}
 
 /**
  * Emit an event that clones given expression to specific row of squrs
@@ -35,7 +35,7 @@ const cloneToColumn = (
  * @param element Element to emit event on, will default to document
  */
 const cloneToRow = (expression: string, row: number, element?: HTMLElement) => {
-  setExpression(expression, `y === ${row}`, element);
-};
+  setExpression(expression, `y === ${row}`, element)
+}
 
-export { safeInvoke, cloneToAll, cloneToColumn, cloneToRow };
+export { safeInvoke, cloneToAll, cloneToColumn, cloneToRow }

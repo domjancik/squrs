@@ -1,7 +1,7 @@
 type MenuItem = {
-  title: string;
-  action?: () => void;
-  children?: MenuItem[];
-};
+  title: string
+  action?: () => void
+  children?: MenuItem[]
+}
 
-export { MenuItem };
+export { MenuItem }

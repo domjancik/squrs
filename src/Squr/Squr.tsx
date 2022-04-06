@@ -25,20 +25,20 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 
-import React, { ReactElement, useState } from "react";
-import EmptySqur from "./EmptySqur";
-import SqurProps from "./SqurProps";
-import { INSTRUMENTS } from "./instruments";
-import useFlipside from "./flipside/useFlipside";
-import Button from "../Button/Button";
-import useSetExpressionEventListener from './useSetExpressionEventListener';
-import useExpressionWithSound from './instruments/Expression/useExpressionWithSound';
-import ExpressionContent from './instruments/Expression/ExpressionContent';
+import React, { ReactElement, useState } from 'react'
+import EmptySqur from './EmptySqur'
+import SqurProps from './SqurProps'
+import { INSTRUMENTS } from './instruments'
+import useFlipside from './flipside/useFlipside'
+import Button from '../Button/Button'
+import useSetExpressionEventListener from './useSetExpressionEventListener'
+import useExpressionWithSound from './instruments/Expression/useExpressionWithSound'
+import ExpressionContent from './instruments/Expression/ExpressionContent'
 
 // const COLOR = '#72dec2'
 // const COLOR_RGB = '114, 222, 194'
 // const COLOR_RGB = '255, 0, 255'
-const COLOR_RGB = "170, 187, 204";
+const COLOR_RGB = '170, 187, 204'
 
 // const com = (a: any[]) => a.map(e => e.toString()).join(',')
 
@@ -47,8 +47,8 @@ const COLOR_RGB = "170, 187, 204";
 //     return {background: `rgb(${com([v, v, v])})`}
 // }
 
-const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` });
-const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` });
+const trns = (a: number) => ({ background: `rgba(${COLOR_RGB}, ${a})` })
+const black = (a: number) => ({ background: `rgba(0,0,0, ${a})` })
 
 // TODO toggle type information
 
@@ -65,19 +65,18 @@ const handleTouch = <T extends unknown>(
   // onClick: () => console.log(on),
   // onTouchEnd: () => set(off),
   // onTouchEnd: () => console.log(off),
-});
-
+})
 
 function useExternalIfDefined<T>(
   init: T,
   external?: T,
   setExternal?: (value: T) => void
 ): [T, (value: T) => void] {
-  const [internal, setInternal] = useState(init);
-  const value = external ?? internal;
-  const setValue = setExternal ?? setInternal;
+  const [internal, setInternal] = useState(init)
+  const value = external ?? internal
+  const setValue = setExternal ?? setInternal
 
-  return [value, setValue];
+  return [value, setValue]
 }
 
 const cssFlipButton = css`
@@ -102,43 +101,44 @@ function Squr({
   setView: setViewExternal,
 }: SqurProps): ReactElement {
   const [expression, setExpression] = useExternalIfDefined(
-    "0",
+    '0',
     expressionExternal,
     setExpressionExternal
-  );
+  )
   const [logic, setLogic] = useExternalIfDefined(
-    "expsyn",
+    'expsyn',
     logicExternal,
     setLogicExternal
-  );
+  )
   const [view, setView] = useExternalIfDefined(
-    "expsyn",
+    'expsyn',
     viewExternal,
     setViewExternal
-  );
+  )
 
-  const { logic: useLogic } = INSTRUMENTS[logic] || {logic: useExpressionWithSound};
-  const { view: View } = INSTRUMENTS[view] || {view: ExpressionContent};
+  const { logic: useLogic } = INSTRUMENTS[logic] || {
+    logic: useExpressionWithSound,
+  }
+  const { view: View } = INSTRUMENTS[view] || { view: ExpressionContent }
 
-  const BaseComponent = contentComponent ?? View;
-  const {ContentComponent, handleFlip} = useFlipside(BaseComponent)
+  const BaseComponent = contentComponent ?? View
+  const { ContentComponent, handleFlip } = useFlipside(BaseComponent)
 
   // TODO useTouch
-  const useExpressionHook = useExpressionHookExternal ?? useLogic;
+  const useExpressionHook = useExpressionHookExternal ?? useLogic
 
   const {
     res: resBase,
     error,
     extra,
-  } = useExpressionHook(expression, setExpression, variables);
-  const [touching, setTouching] = useState(1);
+  } = useExpressionHook(expression, setExpression, variables)
+  const [touching, setTouching] = useState(1)
 
-  const res = resBase;
-  const fontColor = res * touching < 0.5 ? "#abc" : "#444";
-  const palette = res * touching > 0 ? trns(res) : black(-res);
+  const res = resBase
+  const fontColor = res * touching < 0.5 ? '#abc' : '#444'
+  const palette = res * touching > 0 ? trns(res) : black(-res)
 
   useSetExpressionEventListener(setExpression, variables)
-
 
   return (
     <EmptySqur
@@ -160,9 +160,11 @@ function Squr({
         setView={setView}
         extra={extra}
       />
-      <Button css={cssFlipButton} onClick={handleFlip}>flip</Button>
+      <Button css={cssFlipButton} onClick={handleFlip}>
+        flip
+      </Button>
     </EmptySqur>
-  );
+  )
 }
 
-export default Squr;
+export default Squr

@@ -1,15 +1,15 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from 'react'
 
 interface Props {
-  palette: { background: string };
-  children: ReactNode;
-  side: number | string;
+  palette: { background: string }
+  children: ReactNode
+  side: number | string
 }
 
 const sqr = (side: number | string) => ({
   width: side,
   height: side,
-});
+})
 
 function EmptySqur({
   palette,
@@ -27,11 +27,11 @@ function EmptySqur({
       onContextMenu={onContextMenu}
       style={{
         ...{
-          position: "relative",
-          borderRadius: "0.5em",
-          padding: "0.5em",
-          boxSizing: "border-box",
-          boxShadow: "inset 0em -.2em .5em #abc",
+          position: 'relative',
+          borderRadius: '0.5em',
+          padding: '0.5em',
+          boxSizing: 'border-box',
+          boxShadow: 'inset 0em -.2em .5em #abc',
         },
         ...sqr(side),
         ...palette,
@@ -40,7 +40,7 @@ function EmptySqur({
     >
       {children}
     </div>
-  );
+  )
 }
 
-export default EmptySqur;
+export default EmptySqur

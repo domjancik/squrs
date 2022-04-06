@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { pipe } from "fp-ts/lib/function";
-import { collect } from "fp-ts/lib/Record";
-import React, { ReactElement } from "react";
-import Visualizer from "../../../Visualizer/Visualizer";
-import ContentProps from "../../ContentProps";
-import { getNote } from "../../notes";
+import { css } from '@emotion/react'
+import React, { ReactElement } from 'react'
+import { pipe } from 'fp-ts/lib/function'
+import { collect } from 'fp-ts/lib/Record'
+import Visualizer from '../../../Visualizer/Visualizer'
+import ContentProps from '../../ContentProps'
 
 const renderVariables = (variables: { [key: string]: number }) => {
   return pipe(
@@ -16,8 +15,8 @@ const renderVariables = (variables: { [key: string]: number }) => {
         {value}
       </span>
     ))
-  );
-};
+  )
+}
 
 const cssExtra = css`
   opacity: 0.3;
@@ -25,7 +24,7 @@ const cssExtra = css`
   &:hover {
     opacity: 1;
   }
-`;
+`
 
 function ExpressionContent({
   expression,
@@ -37,26 +36,26 @@ function ExpressionContent({
     <>
       <textarea
         style={{
-          fontFamily: "JetBrains Mono, monospace",
-          borderRadius: "0.3em",
-          padding: "0.5em",
-          boxSizing: "border-box",
-          border: "none",
-          width: "100%",
-          boxShadow: "inset 0em .2em .5em #abc",
-          background: "transparent",
+          fontFamily: 'JetBrains Mono, monospace',
+          borderRadius: '0.3em',
+          padding: '0.5em',
+          boxSizing: 'border-box',
+          border: 'none',
+          width: '100%',
+          boxShadow: 'inset 0em .2em .5em #abc',
+          background: 'transparent',
           color: fontColor,
-          fontWeight: "bold",
-          transition: "all 300ms",
-          maxWidth: "100%",
-          minWidth: "100%",
-          minHeight: "50%",
-          maxHeight: "100%",
+          fontWeight: 'bold',
+          transition: 'all 300ms',
+          maxWidth: '100%',
+          minWidth: '100%',
+          minHeight: '50%',
+          maxHeight: '100%',
         }}
         value={expression}
         onChange={(e) => setExpression(e.target.value)}
       />
-      <div css={cssExtra} style={{ color: fontColor, fontSize: "0.5em" }}>
+      <div css={cssExtra} style={{ color: fontColor, fontSize: '0.5em' }}>
         <Visualizer value={res} />
         {/* <div>
           Note: {getNote(variables?.i || 0)}, Vars:{" "}
@@ -69,7 +68,7 @@ function ExpressionContent({
       </div>
       {/* {error && <div style={{ color: "red" }}>{error.description}</div>} */}
     </>
-  );
+  )
 }
 
-export default ExpressionContent;
+export default ExpressionContent

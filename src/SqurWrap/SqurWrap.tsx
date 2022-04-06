@@ -1,15 +1,9 @@
 import React, { ReactElement } from 'react'
 
-interface Props {
-    
-}
+interface Props {}
 
 function SqurWrap({}: Props): ReactElement {
-    return (
-        <div>
-            
-        </div>
-    )
+  return <div></div>
 }
 
 export default SqurWrap

@@ -1,5 +1,7 @@
-import { createContext } from "react";
+import { createContext } from 'react'
 
-const ConfigContext = createContext<{volume: React.MutableRefObject<number> | null}>({volume: null})
+const ConfigContext = createContext<{
+  volume: React.MutableRefObject<number> | null
+}>({ volume: null })
 
 export default ConfigContext
